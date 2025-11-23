@@ -1,0 +1,51 @@
+# Backup and temporary files
+*.bak
+*.tmp
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Firmware and binary files (keep these local for security)
+*.img
+*.img.gz
+*.bin
+*.elf
+*.o
+*.a
+
+# Build artifacts
+build/
+dist/
+*.so
+*.pyc
+__pycache__/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.code-workspace
+.vim/
+
+# Logs
+*.log
+logs/
+
+# Node modules (if applicable)
+node_modules/
+package-lock.json
+
+# Python environment
+venv/
+env/
+.env
+
+# Sensitive data
+.env.local
+secrets.json
+credentials/
+private_keys/
+
+# Watch files
+watch_*
+
