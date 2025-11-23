@@ -1,6 +1,24 @@
-# Photonicat 2 - OpenWrt Installation Guide
+# Photonicat 2 - OpenWrt Installation & Flashing Guide
 
-Complete step-by-step instructions for installing OpenWrt on Photonicat 2 using USB flashing.
+Complete step-by-step instructions for flashing OpenWrt to Photonicat 2 using USB maskrom mode.
+
+## ⭐ Note: Firmware Preparation
+
+**Before following this guide, you need an OpenWrt image. Choose one:**
+
+### PRIMARY: Build Your Own Image (Recommended)
+Follow [../BUILD_QUICK_START.md](../BUILD_QUICK_START.md) to compile custom firmware:
+```bash
+./scripts/build-openwrt.sh --full --extract --backup
+```
+This gives you the latest features, security updates, and full customization.
+
+### ALTERNATIVE: Use Pre-Built Image
+Download from: https://dl.photonicat.com/images/photonicat2/openwrt/
+
+**Once you have your image (either built or pre-built), continue with the flashing steps below.**
+
+---
 
 ## Table of Contents
 1. [Prerequisites & Preparation](#prerequisites--preparation)
@@ -19,7 +37,7 @@ Complete step-by-step instructions for installing OpenWrt on Photonicat 2 using 
 - ✓ USB Type-A to Type-A cable (standard USB data cable)
 - ✓ Computer (Windows, Linux, or Mac)
 - ✓ Fully charged battery or external power
-- ✓ Original factory firmware (backup recommended)
+- ✓ OpenWrt image (built or pre-built)
 
 ### What You'll Lose
 - ⚠️ All data on internal storage (eMMC)

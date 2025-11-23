@@ -1,5 +1,13 @@
 # Quick Start: Building OpenWrt for Photonicat 2
 
+## PRIMARY RECOMMENDED METHOD ⭐
+
+Building your own OpenWrt image is the **recommended** way to flash your Photonicat 2. You get:
+- ✅ Full customization and control
+- ✅ Latest security updates
+- ✅ Latest features and optimizations
+- ✅ Reproducible, verifiable builds
+
 ## Fastest Way to Build
 
 ### One Command Build (Everything)

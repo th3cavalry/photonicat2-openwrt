@@ -14,8 +14,9 @@ This guide covers installing a fresh OpenWrt installation on your Photonicat 2 w
 
 ## Quick Links
 
-- [Building from Source](./guides/05-BUILDING_OPENWRT.md) - Compile custom OpenWrt firmware
-- [Installation Guide](./guides/01-INSTALLATION.md) - Step-by-step firmware flashing
+- [Building Custom OpenWrt](./guides/05-BUILDING_OPENWRT.md) - **PRIMARY: Compile your own firmware** ⭐
+- [Build Quick Start](./BUILD_QUICK_START.md) - One-command automated build
+- [Installation & Flashing](./guides/01-INSTALLATION.md) - Flash your image to device
 - [LCD Screen Setup](./guides/02-LCD_SCREEN_SETUP.md) - Display driver configuration
 - [5G Modem Configuration](./guides/03-5G_MODEM_SETUP.md) - Cellular connectivity
 - [Recovery Procedures](./guides/04-RECOVERY.md) - Device recovery and unbricking
@@ -102,42 +103,62 @@ After installing OpenWrt:
 4. **WiFi** - Set up wireless SSID and security
 5. **System** - Hostname, NTP, web UI password
 
-## Building vs. Flashing Pre-Built Images
+## Installation Paths
 
-### Option 1: Quick Start (Pre-Built Images)
-Use official pre-built images from Photonicat:
-1. Download firmware from https://dl.photonicat.com/images/photonicat2/openwrt/
-2. Flash using instructions in [01-INSTALLATION.md](./guides/01-INSTALLATION.md)
-3. Configure LCD and 5G modem
+### PRIMARY: Build Custom OpenWrt (Recommended) ⭐
 
-### Option 2: Custom Build (Build from Source)
-Compile your own OpenWrt image:
-1. Follow [05-BUILDING_OPENWRT.md](./guides/05-BUILDING_OPENWRT.md)
-2. Or use the automated build script: `./scripts/build-openwrt.sh --full`
-3. Flash your custom image using [01-INSTALLATION.md](./guides/01-INSTALLATION.md)
+Build your own optimized firmware with full control:
+
+1. **Build OpenWrt**: Follow [BUILD_QUICK_START.md](./BUILD_QUICK_START.md)
+   - Run: `./scripts/build-openwrt.sh --full --extract --backup`
+   - Or follow [05-BUILDING_OPENWRT.md](./guides/05-BUILDING_OPENWRT.md) manually
+   - Time: 2-4 hours first build, 30-60 min subsequent
+
+2. **Flash to Device**: Use [01-INSTALLATION.md](./guides/01-INSTALLATION.md)
+   - Image location: `~/openwrt-builds/lede/bin/targets/rockchip/rockchip-rk3568/`
+   - Supports Windows, Linux, and Mac flashing tools
+
+3. **Configure**: Follow device-specific setup guides
+   - LCD Display: [02-LCD_SCREEN_SETUP.md](./guides/02-LCD_SCREEN_SETUP.md)
+   - 5G Modem: [03-5G_MODEM_SETUP.md](./guides/03-5G_MODEM_SETUP.md)
+
+### ALTERNATIVE: Use Pre-Built Images
+
+If you prefer not to compile (faster, but less customizable):
+
+1. Download pre-built firmware from: https://dl.photonicat.com/images/photonicat2/openwrt/
+2. Extract the downloaded image
+3. Follow [01-INSTALLATION.md](./guides/01-INSTALLATION.md) to flash
+
+**Note**: Building from source is recommended for latest features, security updates, and full customization.
 
 ## Installation Overview
 
-1. **Backup**: Save original factory firmware (optional but recommended)
-2. **Build/Prepare**: Build from source OR download pre-built image
+1. **Build**: Compile custom OpenWrt (2-4 hours) OR download pre-built image
+2. **Prepare**: Extract firmware image and bootloader
 3. **Flash**: Enter maskrom mode and flash firmware via USB
-4. **Configure**: Boot into OpenWrt and run post-install configuration
-5. **Enable LCD**: Install and start pcat2_mini_display service
-6. **Setup Modem**: Configure 5G/4G cellular connectivity
+4. **Configure**: Boot into OpenWrt and run post-install setup
+5. **LCD**: Install pcat2_mini_display service for display output
+6. **Modem**: Configure 5G/4G cellular connectivity
 7. **Verify**: Test all features are working
 
 ## Getting Started
 
-Choose your path:
+### Recommended: Build Your Own OpenWrt 🚀
 
-**Fast Track (Pre-built firmware):**
-1. Download firmware from https://dl.photonicat.com/images/photonicat2/openwrt/
-2. Start with **[01-INSTALLATION.md](./guides/01-INSTALLATION.md)** for flashing instructions
+**Start here for full control and latest features:**
+1. Read: **[BUILD_QUICK_START.md](./BUILD_QUICK_START.md)** (5 min read)
+2. Run: `./scripts/build-openwrt.sh --full --extract --backup`
+3. Flash: Follow **[01-INSTALLATION.md](./guides/01-INSTALLATION.md)**
+4. Configure: Use **[02-LCD_SCREEN_SETUP.md](./guides/02-LCD_SCREEN_SETUP.md)** and **[03-5G_MODEM_SETUP.md](./guides/03-5G_MODEM_SETUP.md)**
 
-**Custom Build (Compile from source):**
-1. Start with **[05-BUILDING_OPENWRT.md](./guides/05-BUILDING_OPENWRT.md)** for build instructions
-2. Or run: `./scripts/build-openwrt.sh --full --extract --backup`
-3. Then follow **[01-INSTALLATION.md](./guides/01-INSTALLATION.md)** to flash your custom image
+**Manual build instructions:** [05-BUILDING_OPENWRT.md](./guides/05-BUILDING_OPENWRT.md)
+
+### Alternative: Use Pre-Built Images
+
+**If you don't want to compile:**
+1. Download from: https://dl.photonicat.com/images/photonicat2/openwrt/
+2. Flash: Follow **[01-INSTALLATION.md](./guides/01-INSTALLATION.md)**
 
 ## Important Notes
 
