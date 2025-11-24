@@ -13,8 +13,8 @@ Follow [../BUILD_QUICK_START.md](../BUILD_QUICK_START.md) to compile custom firm
 ```
 This gives you the latest features, security updates, and full customization.
 
-### ALTERNATIVE: Use Pre-Built Image
-Download from: https://dl.photonicat.com/images/photonicat2/openwrt/
+### ALTERNATIVE: Use Official OpenWrt + Photonicat 2 Drivers
+Download official OpenWrt firmware for Rockchip and modify it with Photonicat 2 drivers from this repository. See Step 2 below for details.
 
 **Once you have your image (either built or pre-built), continue with the flashing steps below.**
 
@@ -64,18 +64,29 @@ Create a folder on your computer to organize all files:
 └── backups/
 ```
 
-### Step 2: Download Official Firmware
+### Step 2: Download Official OpenWrt Firmware
 
-**Official Photonicat 2 OpenWrt**
-- URL: https://dl.photonicat.com/images/photonicat2/openwrt/
-- Download the latest `photonicat2-openwrt-*-photonicat2-*.img.gz` file
-- Extract to get the `.img` file
+**Official OpenWrt for Rockchip**
+- URL: https://downloads.openwrt.org/releases/
+- Download the latest stable release for your target (e.g., Rockchip RK3568/RK3576)
+- Choose the appropriate image format for your installation method
+
+**Important**: After downloading the official OpenWrt image, you will need to apply the Photonicat 2 drivers and device tree files from this repository to ensure full hardware support (LCD screen, 5G modem, power management, etc.).
+
+**Applying Photonicat 2 Drivers**:
+1. Clone this repository: `git clone https://github.com/th3cavalry/photonicat2-openwrt.git`
+2. The driver files are located in `photonicat2-support/`:
+   - `device-tree/` - Device tree for Photonicat 2 hardware
+   - `kernel-patches/` - Power management and USB watchdog drivers
+   - `packages/` - LCD display driver (pcat2-display-mini)
+3. Apply the device tree and kernel patches during your OpenWrt build
+4. See [../photonicat2-support/README.md](../photonicat2-support/README.md) for detailed instructions
 
 Example:
 ```bash
-# Extract the firmware
-gunzip photonicat2-openwrt-*-photonicat2-*.img.gz
-# Result: photonicat2-openwrt-*-photonicat2-*.img
+# Extract the firmware (if compressed)
+gunzip openwrt-rockchip-*.img.gz
+# Result: openwrt-rockchip-*.img
 ```
 
 ### Step 3: Download Bootloader
@@ -166,7 +177,7 @@ brew install rkdeveloptool
      - Path: `RK3576_MiniLoaderAll.bin`
      - Check: ✓ Execute
    - **Row 2 (Address 0x00000000)**:
-     - Path: `photonicat2-openwrt-*-photonicat2-*.img`
+     - Path: Your OpenWrt image file (e.g., `openwrt-rockchip-*.img`)
      - Check: ✓ (should be auto-filled)
 
 4. Click "下载" / "Download" button to start flashing
@@ -221,8 +232,8 @@ rkdeveloptool ld
 # Write bootloader
 rkdeveloptool wl 0 RK3576_MiniLoaderAll.bin
 
-# Write firmware image
-rkdeveloptool wl 0x0 photonicat2-openwrt-*-photonicat2-*.img
+# Write firmware image (use your actual OpenWrt image filename)
+rkdeveloptool wl 0x0 openwrt-rockchip-*.img
 
 # Reboot device
 rkdeveloptool rd
