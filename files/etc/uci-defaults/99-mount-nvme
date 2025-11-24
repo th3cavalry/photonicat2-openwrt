@@ -64,20 +64,24 @@ commit fstab
 EOF
 fi
 
-# Copy current overlay to NVMe if it's not empty
-if [ -d "$MOUNT_POINT" ] && [ "$(ls -A $MOUNT_POINT)" ]; then
+# Copy current overlay to NVMe if it contains user data
+# Check for files beyond the default upper/work directories
+if [ -d "$MOUNT_POINT/upper" ] && [ "$(find $MOUNT_POINT/upper -mindepth 1 -maxdepth 1 | wc -l)" -gt 0 ]; then
     logger -t "nvme-mount" "Backing up current overlay to NVMe"
     
     # Temporarily mount NVMe to copy data
     mkdir -p /tmp/nvme_overlay
-    mount "$NVME_DEVICE" /tmp/nvme_overlay
-    
-    if [ $? -eq 0 ]; then
-        # Copy overlay contents
-        cp -a "$MOUNT_POINT"/* /tmp/nvme_overlay/ 2>/dev/null || true
+    if mount "$NVME_DEVICE" /tmp/nvme_overlay; then
+        # Copy overlay contents with error handling
+        if cp -a "$MOUNT_POINT"/* /tmp/nvme_overlay/ 2>/tmp/nvme_copy.log; then
+            logger -t "nvme-mount" "Overlay backup completed"
+        else
+            logger -t "nvme-mount" "Warning: Some files may not have been copied - check /tmp/nvme_copy.log"
+        fi
         umount /tmp/nvme_overlay
         rmdir /tmp/nvme_overlay
-        logger -t "nvme-mount" "Overlay backup completed"
+    else
+        logger -t "nvme-mount" "Error: Failed to mount NVMe for backup"
     fi
 fi
 

@@ -314,6 +314,6 @@ This is an unofficial build system wrapper. While tested, improper firmware flas
 
 ---
 
-**Last Updated**: November 2024  
+**Last Updated**: November 2025  
 **Device**: Photonicat 2 (RK3576)  
 **OpenWrt**: Based on upstream photonicat_openwrt

@@ -243,8 +243,23 @@ main() {
     while [[ $# -gt 0 ]]; do
         case $1 in
             -h|--help) show_usage; exit 0 ;;
-            -j|--jobs) PARALLEL_JOBS="$2"; shift ;;
-            --dir) BUILD_DIR="$2"; UPSTREAM_DIR="$BUILD_DIR/photonicat_openwrt"; shift ;;
+            -j|--jobs) 
+                if [ -z "$2" ] || [[ "$2" =~ ^- ]]; then
+                    print_error "Missing value for --jobs"
+                    exit 1
+                fi
+                PARALLEL_JOBS="$2"
+                shift 
+                ;;
+            --dir) 
+                if [ -z "$2" ] || [[ "$2" =~ ^- ]]; then
+                    print_error "Missing value for --dir"
+                    exit 1
+                fi
+                BUILD_DIR="$2"
+                UPSTREAM_DIR="$BUILD_DIR/photonicat_openwrt"
+                shift 
+                ;;
             --skip-clone) skip_clone=1 ;;
             --skip-feeds) skip_feeds=1 ;;
             *) print_error "Unknown option: $1"; show_usage; exit 1 ;;
