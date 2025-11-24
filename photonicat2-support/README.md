@@ -21,8 +21,20 @@ This directory contains the **minimal essential files** extracted from the photo
 **Note**: These patches should be **reviewed for security and code quality** before use.
 
 ### `packages/`
-- Currently empty - you can add custom packages here if needed
-- Consider extracting `pcat2-display-mini` if you need LCD support (review code first)
+- **`pcat2-display-mini/`** - LCD display driver application (Go-based)
+  - Shows real-time system stats on the 172x320 LCD screen
+  - Displays: CPU, memory, network, battery, 5G modem status, SMS
+  - Fully customizable via config.json
+  - HTTP API for remote control
+  - Source: https://github.com/photonicat/photonicat2_mini_display
+  - Enable in menuconfig: `Utilities → pcat2-display-mini`
+
+### `LCD_AND_FAN.md`
+- **Comprehensive guide** for LCD display and cooling fan support
+- Installation instructions
+- Customization options
+- Troubleshooting tips
+- Manual and automatic control methods
 
 ## Usage
 

@@ -80,10 +80,10 @@ If the NVMe is removed, the device automatically falls back to using the eMMC ov
    ```
    
    The configuration should enable:
-   - `kmod-spi-dev` - SPI device support (for LCD)
-   - `kmod-spi-bitbang` - SPI bitbang support
-   - `kmod-rknpu` - Rockchip NPU support
-   - Disable `luci-app-pcat-manager` if not needed
+   - `kmod-spi-dev`, `kmod-spi-bitbang`, `kmod-spi-rockchip` - SPI for LCD display
+   - `kmod-pwm`, `kmod-pwm-rockchip` - PWM for fan control
+   - `kmod-nvme`, `kmod-fs-ext4` - NVMe storage support
+   - See `configs/pcat2_custom.config.example` for full list
 
 3. **Run the build**:
    ```bash
@@ -158,6 +158,17 @@ Any files placed in the `files/` directory will be copied to the build and inclu
 
 Current custom files:
 - `files/etc/uci-defaults/99-mount-nvme` - NVMe overlay auto-mount script
+
+### LCD Display and Fan Support
+
+The Photonicat 2 includes an LCD display and cooling fan. See **[photonicat2-support/LCD_AND_FAN.md](./photonicat2-support/LCD_AND_FAN.md)** for:
+- ✅ **LCD Display** - GC9307 SPI LCD (172x320px) showing system status
+- ✅ **Cooling Fan** - PWM-controlled automatic thermal management
+- ✅ **Full customization** - Display application with HTTP API
+- ✅ **Installation guide** - How to enable in your build
+- ✅ **Configuration** - Customize display pages, intervals, appearance
+
+The display package (`pcat2-display-mini`) is included in `photonicat2-support/packages/` and automatically copied during build. Enable it in menuconfig or add to your config file.
 
 ### Build Options
 

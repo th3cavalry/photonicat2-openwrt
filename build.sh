@@ -159,6 +159,17 @@ apply_photonicat_support() {
         fi
     fi
     
+    # Copy optional packages (LCD display, etc.)
+    if [ -d "$PHOTONICAT_SUPPORT/packages" ]; then
+        local pkg_count=$(ls -1 "$PHOTONICAT_SUPPORT/packages" 2>/dev/null | wc -l)
+        if [ $pkg_count -gt 0 ]; then
+            mkdir -p package/custom
+            cp -r "$PHOTONICAT_SUPPORT/packages"/* package/custom/
+            print_success "Custom packages copied (LCD display support)"
+            print_info "Enable in menuconfig: Utilities → pcat2-display-mini"
+        fi
+    fi
+    
     print_info "Photonicat 2 hardware support applied"
 }
 
