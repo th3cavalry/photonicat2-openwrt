@@ -71,16 +71,19 @@ Create a folder on your computer to organize all files:
 - Download the latest stable release for your target (e.g., Rockchip RK3568/RK3576)
 - Choose the appropriate image format for your installation method
 
-**Important**: After downloading the official OpenWrt image, you will need to apply the Photonicat 2 drivers and device tree files from this repository to ensure full hardware support (LCD screen, 5G modem, power management, etc.).
+**Important**: Official OpenWrt images do not include Photonicat 2 hardware support by default. For full hardware support (LCD screen, 5G modem, power management, etc.), you have two options:
 
-**Applying Photonicat 2 Drivers**:
-1. Clone this repository: `git clone https://github.com/th3cavalry/photonicat2-openwrt.git`
-2. The driver files are located in `photonicat2-support/`:
+**Option A: Build OpenWrt with Photonicat 2 Support (Recommended)**
+Building from source with the Photonicat 2 drivers integrated is the recommended approach:
+1. Follow [../BUILD_QUICK_START.md](../BUILD_QUICK_START.md) for the complete build process
+2. The build script automatically applies driver files from `photonicat2-support/`:
    - `device-tree/` - Device tree for Photonicat 2 hardware
    - `kernel-patches/` - Power management and USB watchdog drivers
    - `packages/` - LCD display driver (pcat2-display-mini)
-3. Apply the device tree and kernel patches during your OpenWrt build
-4. See [../photonicat2-support/README.md](../photonicat2-support/README.md) for detailed instructions
+3. See `photonicat2-support/README.md` for details on what's included
+
+**Option B: Use Generic OpenWrt Image**
+If you flash a generic OpenWrt image without Photonicat 2 drivers, some hardware features may not work out of the box. You can install driver packages after booting if available.
 
 Example:
 ```bash
