@@ -1,0 +1,30 @@
+# Example custom configuration for Photonicat 2 OpenWrt
+# This is a SAMPLE file. Generate your own pcat2_custom.config using diffconfig.sh
+# See configs/README.md for instructions
+
+# Target System Configuration
+CONFIG_TARGET_rockchip=y
+CONFIG_TARGET_rockchip_armv8=y
+CONFIG_TARGET_rockchip_armv8_DEVICE_photonicat_photonicat2=y
+
+# Required Kernel Modules for LCD Display (SPI)
+CONFIG_PACKAGE_kmod-spi-dev=y
+CONFIG_PACKAGE_kmod-spi-bitbang=y
+
+# Rockchip NPU Support
+CONFIG_PACKAGE_kmod-rknpu=y
+
+# Disable Photonicat Manager (if not needed)
+# CONFIG_PACKAGE_luci-app-pcat-manager is not set
+
+# NVMe Support
+CONFIG_PACKAGE_kmod-nvme=y
+CONFIG_PACKAGE_kmod-fs-ext4=y
+
+# Block device mounting for overlay
+CONFIG_PACKAGE_block-mount=y
+CONFIG_PACKAGE_kmod-usb-storage=y
+
+# Additional utilities
+CONFIG_PACKAGE_fdisk=y
+CONFIG_PACKAGE_lsblk=y

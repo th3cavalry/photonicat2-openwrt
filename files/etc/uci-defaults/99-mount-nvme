@@ -1,0 +1,86 @@
+#!/bin/sh
+#
+# UCI defaults script for Photonicat 2 NVMe overlay mounting
+#
+# This script runs once on first boot to configure automatic NVMe mounting
+# as the /overlay partition. This provides data persistence on NVMe while
+# keeping the base system on eMMC.
+#
+# If the NVMe drive is removed, the device gracefully falls back to the
+# eMMC-based overlay, reverting to a "factory-like" configuration.
+#
+
+NVME_DEVICE="/dev/nvme0n1p1"
+MOUNT_POINT="/overlay"
+
+# Check if NVMe device exists
+if [ ! -b "$NVME_DEVICE" ]; then
+    logger -t "nvme-mount" "NVMe device $NVME_DEVICE not found, skipping configuration"
+    exit 0
+fi
+
+# Check if device is already configured in fstab
+if uci -q get fstab.@mount[0].device | grep -q "$NVME_DEVICE"; then
+    logger -t "nvme-mount" "NVMe device already configured in fstab"
+    exit 0
+fi
+
+logger -t "nvme-mount" "Configuring NVMe overlay mount for $NVME_DEVICE"
+
+# Format NVMe partition if not already formatted
+if ! blkid "$NVME_DEVICE" | grep -q "ext4"; then
+    logger -t "nvme-mount" "Formatting $NVME_DEVICE as ext4"
+    mkfs.ext4 -F -L overlay "$NVME_DEVICE"
+fi
+
+# Configure UCI fstab to mount NVMe as /overlay
+uci -q batch <<EOF
+delete fstab.overlay
+set fstab.overlay=mount
+set fstab.overlay.device='$NVME_DEVICE'
+set fstab.overlay.target='$MOUNT_POINT'
+set fstab.overlay.fstype='ext4'
+set fstab.overlay.options='rw,noatime'
+set fstab.overlay.enabled='1'
+commit fstab
+EOF
+
+logger -t "nvme-mount" "NVMe overlay mount configured successfully"
+
+# Generate /etc/config/fstab if block-mount is available
+if [ -x /sbin/block ]; then
+    /sbin/block detect > /etc/config/fstab
+    
+    # Re-apply our configuration
+    uci -q batch <<EOF
+delete fstab.overlay
+set fstab.overlay=mount
+set fstab.overlay.device='$NVME_DEVICE'
+set fstab.overlay.target='$MOUNT_POINT'
+set fstab.overlay.fstype='ext4'
+set fstab.overlay.options='rw,noatime'
+set fstab.overlay.enabled='1'
+commit fstab
+EOF
+fi
+
+# Copy current overlay to NVMe if it's not empty
+if [ -d "$MOUNT_POINT" ] && [ "$(ls -A $MOUNT_POINT)" ]; then
+    logger -t "nvme-mount" "Backing up current overlay to NVMe"
+    
+    # Temporarily mount NVMe to copy data
+    mkdir -p /tmp/nvme_overlay
+    mount "$NVME_DEVICE" /tmp/nvme_overlay
+    
+    if [ $? -eq 0 ]; then
+        # Copy overlay contents
+        cp -a "$MOUNT_POINT"/* /tmp/nvme_overlay/ 2>/dev/null || true
+        umount /tmp/nvme_overlay
+        rmdir /tmp/nvme_overlay
+        logger -t "nvme-mount" "Overlay backup completed"
+    fi
+fi
+
+logger -t "nvme-mount" "System will use NVMe overlay on next boot"
+
+exit 0
