@@ -170,12 +170,17 @@ Current custom files:
 
 ### LCD Display and Fan Support
 
-The Photonicat 2 includes an LCD display and cooling fan. See **[photonicat2-support/LCD_AND_FAN.md](./photonicat2-support/LCD_AND_FAN.md)** for:
+The Photonicat 2 includes an LCD display and cooling fan. Documentation:
+- 📘 **[Complete Guide](./guides/06-SCREEN_AND_FAN_DETAILED.md)** - Comprehensive configuration documentation
+- 📖 **[Quick Reference](./photonicat2-support/LCD_AND_FAN.md)** - Installation and basic setup
+
+Features:
 - ✅ **LCD Display** - GC9307 SPI LCD (172x320px) showing system status
 - ✅ **Cooling Fan** - PWM-controlled automatic thermal management
 - ✅ **Full customization** - Display application with HTTP API
 - ✅ **Installation guide** - How to enable in your build
-- ✅ **Configuration** - Customize display pages, intervals, appearance
+- ✅ **Configuration** - Customize display pages, intervals, appearance, colors
+- ✅ **All options documented** - Complete data keys, element types, and examples
 
 The display package (`pcat2-display-mini`) is included in `photonicat2-support/packages/` and automatically copied during build. Enable it in menuconfig or add to your config file.
 

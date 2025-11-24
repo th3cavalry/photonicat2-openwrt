@@ -9,6 +9,8 @@ The Photonicat 2 includes two important hardware features that require software 
 
 This document explains how to enable these features with vanilla OpenWrt.
 
+> 📖 **For comprehensive configuration guide**: See [guides/06-SCREEN_AND_FAN_DETAILED.md](../guides/06-SCREEN_AND_FAN_DETAILED.md) for complete documentation including all display configuration options, data keys, element types, color schemes, configuration examples, and detailed fan control options.
+
 ## LCD Display Support
 
 ### Hardware Specifications

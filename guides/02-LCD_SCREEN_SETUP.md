@@ -1,6 +1,8 @@
 # Photonicat 2 - LCD Screen Setup Guide
 
-Complete guide for enabling and configuring the 5-inch LCD display on Photonicat 2 running OpenWrt.
+Complete guide for enabling and configuring the 1.28-inch LCD display on Photonicat 2 running OpenWrt.
+
+> 📖 **For comprehensive customization**: See [06-SCREEN_AND_FAN_DETAILED.md](./06-SCREEN_AND_FAN_DETAILED.md) for complete documentation on all configuration options, data keys, element types, colors, and examples.
 
 ## Overview
 
