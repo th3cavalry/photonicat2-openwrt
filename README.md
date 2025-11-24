@@ -56,12 +56,21 @@ If the NVMe is removed, the device automatically falls back to using the eMMC ov
 
 ### Prerequisites
 
-- Linux development environment (Ubuntu/Debian recommended)
+- Linux development environment (Ubuntu/Debian or Arch Linux)
 - Required packages:
+  
+  **Ubuntu/Debian:**
   ```bash
   sudo apt update
   sudo apt install -y build-essential git curl wget unzip
   ```
+  
+  **Arch Linux:**
+  ```bash
+  sudo pacman -Syu
+  sudo pacman -S --needed base-devel git curl wget unzip
+  ```
+
 - At least 50GB of free disk space
 - 2-4 hours for initial build (faster on subsequent builds)
 
