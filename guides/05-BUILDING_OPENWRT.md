@@ -8,7 +8,7 @@ This guide covers building OpenWrt from source using the Photonicat team's optim
 
 ### Build Requirements
 
-**System**: Linux (Debian/Ubuntu recommended)
+**System**: Linux (Debian/Ubuntu, Arch Linux, or macOS)
 **Disk Space**: 50GB+ free space
 **RAM**: 8GB+ (16GB+ recommended)
 **Time**: 2-4 hours for first build (depends on internet speed)
@@ -19,11 +19,12 @@ This guide covers building OpenWrt from source using the Photonicat team's optim
 
 ### System Requirements
 
-Ensure you have a Linux system. This guide assumes Ubuntu 20.04 LTS or Debian 11+.
+Ensure you have a Linux system. This guide supports Ubuntu 20.04 LTS, Debian 11+, or Arch Linux.
 
 ```bash
 # Check Linux version
-lsb_release -a
+lsb_release -a  # Ubuntu/Debian
+cat /etc/os-release  # Any Linux
 uname -m  # Should be x86_64 or aarch64
 ```
 
@@ -63,6 +64,27 @@ sudo apt install -y \
   patch pkgconf python3 python3-pyelftools python3-setuptools \
   qemu-utils rsync scons squashfs-tools subversion swig texinfo \
   uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev
+```
+
+### Arch Linux
+
+```bash
+# Update system
+sudo pacman -Syu
+
+# Install required packages
+sudo pacman -S --needed \
+  base-devel git wget curl unzip vim \
+  asciidoc bash bc bison boost bzip2 ccache clang cmake cpio \
+  dtc fakeroot flex gawk gcc git glibc gperf help2man intltool \
+  lib32-glibc libelf libffi libxslt make msmtp ncurses openssl \
+  patch pkgconf python python-pyelftools python-setuptools \
+  qemu-base rsync scons squashfs-tools subversion swig texinfo \
+  uglify-js unzip upx wget which xmlto xxd zlib
+
+# Install AUR packages (optional, for additional tools)
+# You may use yay or another AUR helper
+# yay -S ack antlr3 genisoimage haveged lrzsz ninja p7zip
 ```
 
 ### macOS
