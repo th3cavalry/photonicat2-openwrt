@@ -1,21 +1,22 @@
-# Example custom configuration for Photonicat 2 OpenWrt
+# Example custom configuration for Photonicat 2 with Vanilla OpenWrt
 # This is a SAMPLE file. Generate your own pcat2_custom.config using diffconfig.sh
 # See configs/README.md for instructions
+#
+# NOTE: This config is for VANILLA OpenWrt, not photonicat/photonicat_openwrt fork
+# Target profile must match the device tree we're adding (RK3576 Photonicat 2)
 
 # Target System Configuration
 CONFIG_TARGET_rockchip=y
 CONFIG_TARGET_rockchip_armv8=y
-CONFIG_TARGET_rockchip_armv8_DEVICE_photonicat_photonicat2=y
+# Note: You may need to manually add/select Photonicat 2 target after device tree is added
 
 # Required Kernel Modules for LCD Display (SPI)
 CONFIG_PACKAGE_kmod-spi-dev=y
 CONFIG_PACKAGE_kmod-spi-bitbang=y
+CONFIG_PACKAGE_kmod-spi-rockchip=y
 
-# Rockchip NPU Support
-CONFIG_PACKAGE_kmod-rknpu=y
-
-# Disable Photonicat Manager (if not needed)
-# CONFIG_PACKAGE_luci-app-pcat-manager is not set
+# Rockchip NPU Support (if available in vanilla OpenWrt)
+# CONFIG_PACKAGE_kmod-rknpu=y  # May not be in vanilla OpenWrt
 
 # NVMe Support
 CONFIG_PACKAGE_kmod-nvme=y
@@ -25,6 +26,19 @@ CONFIG_PACKAGE_kmod-fs-ext4=y
 CONFIG_PACKAGE_block-mount=y
 CONFIG_PACKAGE_kmod-usb-storage=y
 
+# 5G Modem Support (standard OpenWrt packages)
+CONFIG_PACKAGE_kmod-usb-serial=y
+CONFIG_PACKAGE_kmod-usb-serial-option=y
+CONFIG_PACKAGE_kmod-usb-serial-wwan=y
+CONFIG_PACKAGE_kmod-usb-net=y
+CONFIG_PACKAGE_kmod-usb-net-cdc-mbim=y
+CONFIG_PACKAGE_kmod-usb-net-qmi-wwan=y
+
+# LuCI Web Interface (standard OpenWrt, not pcat-manager)
+CONFIG_PACKAGE_luci=y
+CONFIG_PACKAGE_luci-ssl=y
+
 # Additional utilities
 CONFIG_PACKAGE_fdisk=y
 CONFIG_PACKAGE_lsblk=y
+CONFIG_PACKAGE_htop=y

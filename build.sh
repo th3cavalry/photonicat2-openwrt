@@ -3,9 +3,10 @@
 #############################################################################
 # Photonicat 2 OpenWrt Build System Wrapper
 # 
-# This script wraps the upstream photonicat_openwrt build process and
-# applies custom configurations for factory-like installation with NVMe
-# overlay support.
+# This script builds vanilla OpenWrt with Photonicat 2 hardware support.
+# Uses official OpenWrt repository with minimal device-specific patches.
+#
+# Security: All packages come from official OpenWrt feeds, not third-party forks.
 #
 # Usage: ./build.sh
 #
@@ -22,10 +23,11 @@ NC='\033[0m'  # No Color
 
 # Configuration
 BUILD_DIR="${BUILD_DIR:-$(pwd)/build}"
-UPSTREAM_REPO="https://github.com/photonicat/photonicat_openwrt"
-UPSTREAM_DIR="$BUILD_DIR/photonicat_openwrt"
+UPSTREAM_REPO="https://github.com/openwrt/openwrt.git"
+UPSTREAM_DIR="$BUILD_DIR/openwrt"
 CUSTOM_CONFIG="$(pwd)/configs/pcat2_custom.config"
 CUSTOM_FILES="$(pwd)/files"
+PHOTONICAT_SUPPORT="$(pwd)/photonicat2-support"
 PARALLEL_JOBS="${PARALLEL_JOBS:-$(nproc)}"
 
 # Functions
@@ -92,10 +94,10 @@ check_custom_config() {
 }
 
 clone_upstream() {
-    print_header "Cloning Upstream Repository"
+    print_header "Cloning Official OpenWrt Repository"
     
     if [ -d "$UPSTREAM_DIR" ]; then
-        print_warning "Upstream repository already exists at $UPSTREAM_DIR"
+        print_warning "OpenWrt repository already exists at $UPSTREAM_DIR"
         read -p "Update existing repo? (y/n) " -n 1 -r
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -106,9 +108,10 @@ clone_upstream() {
     else
         mkdir -p "$BUILD_DIR"
         cd "$BUILD_DIR"
-        git clone "$UPSTREAM_REPO" photonicat_openwrt
-        cd photonicat_openwrt
-        print_success "Repository cloned to $UPSTREAM_DIR"
+        print_info "Cloning vanilla OpenWrt (not photonicat fork)..."
+        git clone "$UPSTREAM_REPO" openwrt
+        cd openwrt
+        print_success "Official OpenWrt cloned to $UPSTREAM_DIR"
     fi
 }
 
@@ -121,6 +124,42 @@ update_feeds() {
     
     ./scripts/feeds install -a
     print_success "Feeds installed"
+}
+
+apply_photonicat_support() {
+    print_header "Applying Photonicat 2 Hardware Support"
+    
+    cd "$UPSTREAM_DIR"
+    
+    # Copy device tree file
+    if [ -f "$PHOTONICAT_SUPPORT/device-tree/rk3576-photonicat2.dts" ]; then
+        mkdir -p target/linux/rockchip/files/arch/arm64/boot/dts/rockchip/
+        cp "$PHOTONICAT_SUPPORT/device-tree/rk3576-photonicat2.dts" \
+           target/linux/rockchip/files/arch/arm64/boot/dts/rockchip/
+        print_success "Device tree file copied"
+    else
+        print_warning "Device tree file not found, build may fail"
+    fi
+    
+    # Copy kernel patches
+    if [ -d "$PHOTONICAT_SUPPORT/kernel-patches" ]; then
+        local patch_count=$(ls -1 "$PHOTONICAT_SUPPORT/kernel-patches"/*.patch 2>/dev/null | wc -l)
+        if [ $patch_count -gt 0 ]; then
+            # Determine kernel version - use latest available
+            local kernel_version=$(ls -1d target/linux/rockchip/patches-* | sort -V | tail -1 | sed 's/.*patches-//')
+            local patch_dir="target/linux/rockchip/patches-$kernel_version"
+            
+            if [ -d "$patch_dir" ]; then
+                cp "$PHOTONICAT_SUPPORT/kernel-patches"/*.patch "$patch_dir/"
+                print_success "Kernel patches copied to $patch_dir"
+                print_warning "⚠️  Kernel patches should be reviewed for security before use!"
+            else
+                print_warning "Patch directory $patch_dir not found"
+            fi
+        fi
+    fi
+    
+    print_info "Photonicat 2 hardware support applied"
 }
 
 apply_custom_config() {
@@ -209,10 +248,11 @@ show_usage() {
     cat << USAGEEOF
 Usage: $0 [OPTIONS]
 
-This script builds a custom OpenWrt image for Photonicat 2 with:
+This script builds vanilla OpenWrt with Photonicat 2 hardware support:
+  - Uses official OpenWrt repository (not third-party forks)
+  - Applies minimal device-specific patches (reviewed recommended)
   - Factory-like installation on eMMC
   - Automatic NVMe overlay mount on first boot
-  - Custom kernel modules and configurations
 
 OPTIONS:
     -h, --help              Show this help message
@@ -257,7 +297,7 @@ main() {
                     exit 1
                 fi
                 BUILD_DIR="$2"
-                UPSTREAM_DIR="$BUILD_DIR/photonicat_openwrt"
+                UPSTREAM_DIR="$BUILD_DIR/openwrt"
                 shift 
                 ;;
             --skip-clone) skip_clone=1 ;;
@@ -282,6 +322,8 @@ main() {
     else
         print_info "Skipping upstream clone"
     fi
+    
+    apply_photonicat_support
     
     if [ $skip_feeds -eq 0 ]; then
         update_feeds

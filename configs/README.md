@@ -4,19 +4,23 @@
 
 This directory should contain your custom OpenWrt configuration file (`pcat2_custom.config`) that will be used during the build process.
 
+**Important**: This wrapper uses **vanilla OpenWrt** (not the photonicat fork), so your configuration should be compatible with official OpenWrt.
+
 ## Generating Your Custom Config
 
-The custom configuration file is generated using the upstream OpenWrt `diffconfig.sh` script. This creates a minimal configuration diff that captures only your custom settings.
+The custom configuration file is generated using the OpenWrt `diffconfig.sh` script. This creates a minimal configuration diff that captures only your custom settings.
 
 ### Steps to Generate Configuration
 
-1. **Clone and build the upstream repository** (if not already done):
+1. **Clone and build vanilla OpenWrt** (if not already done):
    ```bash
-   git clone https://github.com/photonicat/photonicat_openwrt
-   cd photonicat_openwrt
+   git clone https://github.com/openwrt/openwrt.git
+   cd openwrt
    ./scripts/feeds update -a
    ./scripts/feeds install -a
    ```
+   
+   **Note**: Use official OpenWrt, not photonicat/photonicat_openwrt, for compatibility with this build wrapper.
 
 2. **Configure your build** using menuconfig:
    ```bash

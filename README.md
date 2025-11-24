@@ -2,14 +2,26 @@
 
 ## Overview
 
-This repository provides a **build system wrapper** for creating custom OpenWrt images for the Photonicat 2 device. It wraps the upstream [photonicat/photonicat_openwrt](https://github.com/photonicat/photonicat_openwrt) repository and applies custom configurations optimized for a "factory-like" installation.
+This repository provides a **build system wrapper** for creating custom OpenWrt images for the Photonicat 2 device using **vanilla OpenWrt** with minimal device-specific patches. 
 
 **Key Features:**
+- 🔒 **Security First**: Uses official OpenWrt repository, not third-party forks
 - 🏭 **Factory-like Installation**: Base system installs to internal eMMC
 - 💾 **NVMe Data Persistence**: Automatic overlay mounting on NVMe for user data
 - 🔄 **Graceful Fallback**: Reverts to eMMC if NVMe is removed
-- ⚙️ **Custom Configuration**: Easy customization via config files
+- ⚙️ **Minimal Patches**: Only essential hardware support (device tree + drivers)
 - 🎯 **Single Command Build**: Simple build process with one script
+
+## Why Vanilla OpenWrt?
+
+Unlike the photonicat/photonicat_openwrt fork which uses custom package feeds and extensive modifications, this build wrapper:
+- ✅ Uses **official OpenWrt package repositories** (better security, regular updates)
+- ✅ Applies **minimal device-specific patches** (device tree, essential drivers only)
+- ✅ Avoids **supply chain risks** from third-party maintained feeds
+- ✅ Maintains **compatibility with upstream** OpenWrt
+- ✅ Provides **transparency** - all patches are in `photonicat2-support/` for review
+
+See `photonicat2-support/README.md` for details on what's included vs. excluded.
 
 ## Architecture
 
@@ -79,8 +91,9 @@ If the NVMe is removed, the device automatically falls back to using the eMMC ov
    ```
    
    This will:
-   - Clone the upstream photonicat_openwrt repository
-   - Update and install all feeds
+   - Clone the **official OpenWrt repository** (not photonicat fork)
+   - Apply Photonicat 2 device tree and essential kernel patches
+   - Update and install official OpenWrt feeds
    - Apply your custom configuration
    - Copy custom files (including NVMe mount script)
    - Build the complete OpenWrt image
@@ -88,7 +101,7 @@ If the NVMe is removed, the device automatically falls back to using the eMMC ov
 4. **Find your image**:
    ```bash
    # Image will be in:
-   ./build/photonicat_openwrt/bin/targets/rockchip/armv8/
+   ./build/openwrt/bin/targets/rockchip/armv8/
    ```
 
 ### Flashing the Image
@@ -100,7 +113,7 @@ Once built, flash the image to your Photonicat 2's eMMC storage:
 3. Flash the `.img` file to eMMC
 4. Reboot and enjoy!
 
-For detailed flashing instructions, see the [upstream documentation](https://github.com/photonicat/photonicat_openwrt#flashing).
+For detailed flashing instructions, see the legacy guides in the `guides/` directory.
 
 ## Repository Structure
 
@@ -109,12 +122,18 @@ photonicat2-openwrt/
 ├── build.sh                          # Main build wrapper script
 ├── configs/
 │   ├── README.md                     # Configuration guide
-│   └── pcat2_custom.config           # Your custom config (you create this)
+│   ├── pcat2_custom.config           # Your custom config (you create this)
+│   └── pcat2_custom.config.example   # Example configuration
 ├── files/
 │   └── etc/
 │       └── uci-defaults/
 │           └── 99-mount-nvme         # First-boot NVMe mount script
-├── guides/                           # Additional documentation
+├── photonicat2-support/              # ⭐ Hardware support files
+│   ├── README.md                     # What's included and why
+│   ├── device-tree/                  # RK3576 Photonicat 2 device tree
+│   ├── kernel-patches/               # Essential drivers (review before use!)
+│   └── packages/                     # Custom packages (optional)
+├── guides/                           # Legacy documentation
 ├── scripts/                          # Legacy scripts (for reference)
 └── README.md                         # This file
 ```
@@ -174,11 +193,14 @@ Current custom files:
 
 ### Build Process
 
-1. **Clone Upstream**: The build script clones the official photonicat_openwrt repository
-2. **Feed Management**: Updates and installs all OpenWrt package feeds
-3. **Apply Config**: Copies your `pcat2_custom.config` and runs `make defconfig`
-4. **Custom Files**: Integrates files from `files/` directory into the build
-5. **Compilation**: Builds the complete firmware image with your settings
+1. **Clone Upstream**: Clones **official OpenWrt** from `https://github.com/openwrt/openwrt.git`
+2. **Apply Hardware Support**: Copies Photonicat 2 device tree and essential kernel patches
+3. **Feed Management**: Updates and installs **official OpenWrt package feeds** (not photonicat forks)
+4. **Apply Config**: Copies your `pcat2_custom.config` and runs `make defconfig`
+5. **Custom Files**: Integrates files from `files/` directory into the build
+6. **Compilation**: Builds the complete firmware image with your settings
+
+**Key Difference**: Unlike photonicat/photonicat_openwrt which uses custom feed repositories for ALL packages, this wrapper uses official OpenWrt feeds, ensuring better security and transparency.
 
 ### Runtime Behavior
 
@@ -237,6 +259,40 @@ cd ../..
 - Remove NVMe drive or disable its mount in `/etc/config/fstab`
 - Reboot - system will use eMMC overlay
 
+## Vanilla OpenWrt vs Photonicat Fork
+
+### What's Different?
+
+This build wrapper uses **vanilla OpenWrt** instead of the photonicat fork:
+
+| Aspect | This Wrapper (Vanilla) | photonicat/photonicat_openwrt Fork |
+|--------|----------------------|----------------------------------|
+| **Base Repository** | Official OpenWrt | Modified fork |
+| **Package Feeds** | Official OpenWrt feeds | Custom photonicat-controlled feeds |
+| **Security** | Community-reviewed packages | Unknown review process |
+| **Updates** | Direct from OpenWrt project | Delayed through photonicat |
+| **Modifications** | Minimal (device tree + 2 patches) | Extensive (feeds, patches, packages) |
+| **Transparency** | All patches visible in repo | Distributed across multiple repos |
+| **Supply Chain Risk** | Low (official sources) | Higher (single-entity controlled) |
+
+### What's Included from Photonicat?
+
+Only the **essential hardware support** (extracted to `photonicat2-support/`):
+- ✅ Device tree file (rk3576-photonicat2.dts)
+- ✅ Power management driver patch
+- ✅ USB watchdog driver patch
+
+### What's NOT Included?
+
+To maintain security and use vanilla OpenWrt:
+- ❌ Custom package feeds (use official OpenWrt feeds instead)
+- ❌ pcat-manager web interface (use standard LuCI)
+- ❌ Custom base scripts (you can add if needed)
+- ❌ Overclocking patches
+- ❌ Other non-essential modifications
+
+See `photonicat2-support/README.md` for detailed analysis.
+
 ## Advanced Usage
 
 ### Manual Build Steps
@@ -244,11 +300,15 @@ cd ../..
 If you want to manually control the build process:
 
 ```bash
-# Clone upstream
-git clone https://github.com/photonicat/photonicat_openwrt build/photonicat_openwrt
-cd build/photonicat_openwrt
+# Clone vanilla OpenWrt
+git clone https://github.com/openwrt/openwrt.git build/openwrt
+cd build/openwrt
 
-# Update feeds
+# Apply Photonicat 2 hardware support
+cp ../../photonicat2-support/device-tree/*.dts target/linux/rockchip/files/arch/arm64/boot/dts/rockchip/
+cp ../../photonicat2-support/kernel-patches/*.patch target/linux/rockchip/patches-6.12/
+
+# Update feeds (official OpenWrt feeds)
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 
