@@ -91,6 +91,20 @@ check_custom_config() {
     fi
     
     print_success "Custom config found: $CUSTOM_CONFIG"
+    
+    echo ""
+    print_info "Current Configuration Settings:"
+    echo "----------------------------------------"
+    cat "$CUSTOM_CONFIG"
+    echo "----------------------------------------"
+    echo ""
+    
+    read -p "Do you want to proceed with this configuration? [Y/n] " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        print_warning "Build cancelled by user."
+        exit 1
+    fi
 }
 
 clone_upstream() {
