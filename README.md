@@ -374,6 +374,7 @@ The `guides/` directory contains detailed documentation for installation, config
 - [Recovery Guide](guides/04-RECOVERY.md)
 - [Building OpenWrt](guides/05-BUILDING_OPENWRT.md)
 - [Detailed Screen & Fan Guide](guides/06-SCREEN_AND_FAN_DETAILED.md)
+- [Vanilla OpenWrt Build Analysis](guides/07-VANILLA_OPENWRT_BUILD_ANALYSIS.md) - Comparison with official OpenWrt build methods
 
 ## Support & Resources
 
