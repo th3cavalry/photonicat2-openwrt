@@ -40,10 +40,10 @@ If you prefer more control, follow [05-BUILDING_OPENWRT.md](./guides/05-BUILDING
 
 Your flashable image is ready at:
 ```
-~/openwrt-builds/lede/bin/targets/rockchip/rockchip-rk3568/
+~/openwrt-builds/openwrt/bin/targets/rockchip/armv8/
 ```
 
-**Image file:** `openwrt-rockchip-rockchip-rk3568-photonicat2-*.img`
+**Image file:** `openwrt-rockchip-armv8-armsom_sige7-*.img.gz`
 
 ### Next: Flash to Device
 
@@ -93,7 +93,7 @@ OPTIONS:
 
 ```bash
 # Check what went wrong and retry
-cd ~/openwrt-builds/lede
+cd ~/openwrt-builds/openwrt
 make clean
 ./scripts/feeds update -a
 ./scripts/feeds install -a
