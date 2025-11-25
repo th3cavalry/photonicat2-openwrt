@@ -142,8 +142,7 @@ photonicat2-openwrt/
 │   ├── device-tree/                  # RK3576 Photonicat 2 device tree
 │   ├── kernel-patches/               # Essential drivers (review before use!)
 │   └── packages/                     # Custom packages (optional)
-├── guides/                           # Legacy documentation
-├── scripts/                          # Legacy scripts (for reference)
+├── guides/                           # Documentation
 └── README.md                         # This file
 ```
 
@@ -375,8 +374,6 @@ The `guides/` directory contains detailed documentation for installation, config
 - [Recovery Guide](guides/04-RECOVERY.md)
 - [Building OpenWrt](guides/05-BUILDING_OPENWRT.md)
 - [Detailed Screen & Fan Guide](guides/06-SCREEN_AND_FAN_DETAILED.md)
-
-The `scripts/` directory contains the legacy build script (`build-openwrt.sh`) which can be used as an alternative to the main `build.sh` wrapper.
 
 ## Support & Resources
 
