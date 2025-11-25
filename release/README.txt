@@ -11,7 +11,7 @@ Changes:
   - Modem: ModemManager, QMI/MBim/RNDIS drivers, LuCI protocol support.
   - WiFi: Drivers for Realtek (RTW88/89) and Mediatek (MT7921), WPA3 support.
   - Storage: Ext4, VFAT, ExFAT, NTFS3, UAS (USB3 speed) support.
-  - System: htop, nano, curl, wget-ssl, git, pciutils, usbutils, iperf3, bind-dig.
+  - System: htop, nano, curl, wget-ssl, git, pciutils, usbutils, iperf3, bind-dig, irqbalance, sftp-server.
   - Web UI: LuCI with SSL, Terminal (ttyd), Commands, Firewall, Opkg.
 - Fixed build conflict with pcat2-display-mini package.
 - Moved display configuration to uci-defaults script.
