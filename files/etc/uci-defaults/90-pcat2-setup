@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Enable and start the display service
+if [ -x /etc/init.d/pcat2-display-mini ]; then
+    /etc/init.d/pcat2-display-mini enable
+    /etc/init.d/pcat2-display-mini start
+fi
+
+exit 0

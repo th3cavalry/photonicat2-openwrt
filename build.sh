@@ -199,6 +199,26 @@ apply_custom_config() {
     # Run defconfig to expand the config
     make defconfig
     print_success "Configuration expanded with defconfig"
+
+    # Force enable Photonicat kernel drivers in the kernel config
+    # This is necessary because these are new symbols introduced by patches
+    # and OpenWrt's build system defaults them to 'n' (no) if not explicitly set
+    print_info "Forcing Photonicat kernel drivers..."
+    
+    # We need to find the kernel config file. It's usually in build_dir/target-*/linux-*/linux-*/.config
+    # But that file is generated during the build.
+    # Instead, we can append to the target kernel config in target/linux/rockchip/armv8/config-*
+    
+    local kernel_config_file=$(find target/linux/rockchip/armv8 -name "config-*" | sort | tail -n 1)
+    if [ -f "$kernel_config_file" ]; then
+        print_info "Updating kernel config: $kernel_config_file"
+        echo "CONFIG_PHOTONICAT_PM=y" >> "$kernel_config_file"
+        echo "CONFIG_PHOTONICAT_USB_WDT=y" >> "$kernel_config_file"
+        echo "CONFIG_SERIAL_DEV_BUS=y" >> "$kernel_config_file"
+        print_success "Kernel config updated"
+    else
+        print_warning "Could not find kernel config file to update"
+    fi
 }
 
 copy_custom_files() {
