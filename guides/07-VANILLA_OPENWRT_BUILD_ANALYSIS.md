@@ -21,7 +21,7 @@ The OpenWrt project provides two main methods for creating custom firmware:
 | **Full Source Build** | Clone OpenWrt source, configure via `menuconfig`, compile from scratch | Maximum customization, custom kernel patches, non-standard packages |
 | **Image Builder** | Use pre-compiled packages to assemble a custom image | Quick builds, standard packages only, no kernel modifications |
 
-Reference: [OpenWrt Quick Image Building Guide](https://openwrt.org/docs/guide-developer/toolchain/beginners-build-guide)
+Reference: [OpenWrt Wiki - Quick image building guide](https://openwrt.org/docs/guide-developer/toolchain/beginners-build-guide)
 
 ### This Repository's Approach
 
@@ -201,7 +201,7 @@ This repository provides a **legitimate, secure, and bloat-free approach** to bu
 
 ## References
 
-- [OpenWrt Quick Image Building Guide](https://openwrt.org/docs/guide-developer/toolchain/beginners-build-guide)
+- [OpenWrt Wiki - Quick image building guide](https://openwrt.org/docs/guide-developer/toolchain/beginners-build-guide)
 - [OpenWrt Build System Essentials](https://openwrt.org/docs/guide-developer/toolchain/buildsystem_essentials)
 - [OpenWrt Image Builder](https://openwrt.org/docs/guide-user/additional-software/imagebuilder)
 - [OpenWrt Security](https://openwrt.org/docs/guide-user/security/start)
