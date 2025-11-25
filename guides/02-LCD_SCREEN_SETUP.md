@@ -336,7 +336,7 @@ nano /etc/pcat2_mini_display-config.json
 
 After editing, restart service:
 ```bash
-systemctl restart pcat2_mini_display.service
+/etc/init.d/pcat2-display-mini restart
 ```
 
 ---
@@ -408,10 +408,10 @@ This method avoids file collisions during the build process.
 3. **Monitor Service**:
    ```bash
    # Watch service logs in real-time
-   journalctl -u pcat2_mini_display -f
+   logread -f -e pcat2-display-mini
    
    # Check system resources used
-   ps aux | grep pcat2_mini_display
+   ps | grep pcat2_mini_display
    ```
 
 ### Access Display API
@@ -456,7 +456,7 @@ curl -X POST -d "max_brightness=1" \
 
 3. Check service logs:
    ```bash
-   journalctl -u pcat2_mini_display -n 50
+   logread | grep pcat2-display-mini | tail -n 50
    # Look for error messages
    ```
 
@@ -509,11 +509,14 @@ curl -X POST -d "max_brightness=1" \
 
 3. Run with debug output:
    ```bash
-   # Temporarily modify service
-   systemctl edit pcat2_mini_display.service
-   # Add: Environment="DEBUG=1"
-   systemctl restart pcat2_mini_display
-   journalctl -u pcat2_mini_display -f
+   # Stop the service first
+   /etc/init.d/pcat2-display-mini stop
+   
+   # Run manually to see output
+   /usr/bin/pcat2_mini_display
+   
+   # Or check logs
+   logread -f -e pcat2-display-mini
    ```
 
 ### High CPU Usage

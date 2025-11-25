@@ -164,14 +164,14 @@ ModemManager provides a high-level interface for modem control.
 
 ```bash
 # Start service
-systemctl enable ModemManager
-systemctl start ModemManager
+/etc/init.d/modemmanager enable
+/etc/init.d/modemmanager start
 
 # Verify running
-systemctl status ModemManager
+ps | grep ModemManager
 
 # Check logs
-journalctl -u ModemManager -f
+logread -f -e ModemManager
 ```
 
 ### Step 5b: List Modems
