@@ -9,11 +9,12 @@ Complete step-by-step instructions for flashing OpenWrt to Photonicat 2 using US
 ### PRIMARY: Build Your Own Image (Recommended)
 Follow [../BUILD_QUICK_START.md](../BUILD_QUICK_START.md) to compile custom firmware:
 ```bash
-./scripts/build-openwrt.sh --full --extract --backup
+./build.sh
 ```
 This gives you the latest features, security updates, and full customization.
 
 ### ALTERNATIVE: Use Pre-Built Image
+If you prefer not to build from source, you can use the vendor provided images, though they may differ from the vanilla OpenWrt build provided by this repository.
 Download from: https://dl.photonicat.com/images/photonicat2/openwrt/
 
 **Once you have your image (either built or pre-built), continue with the flashing steps below.**
@@ -64,9 +65,21 @@ Create a folder on your computer to organize all files:
 └── backups/
 ```
 
-### Step 2: Download Official Firmware
+### Step 2: Locate Firmware Image
 
-**Official Photonicat 2 OpenWrt**
+**Option A: Use Your Built Image**
+If you built the image using `./build.sh`, the image file will be located at:
+`build/openwrt/bin/targets/rockchip/armv8/openwrt-rockchip-armv8-armsom_sige7-squashfs-sysupgrade.img.gz`
+
+Copy this file to your working directory and extract it:
+```bash
+cp build/openwrt/bin/targets/rockchip/armv8/openwrt-rockchip-armv8-armsom_sige7-squashfs-sysupgrade.img.gz ~/photonicat2-install/firmware/
+cd ~/photonicat2-install/firmware/
+gunzip openwrt-rockchip-armv8-armsom_sige7-squashfs-sysupgrade.img.gz
+# Result: openwrt-rockchip-armv8-armsom_sige7-squashfs-sysupgrade.img
+```
+
+**Option B: Download Official Firmware**
 - URL: https://dl.photonicat.com/images/photonicat2/openwrt/
 - Download the latest `photonicat2-openwrt-*-photonicat2-*.img.gz` file
 - Extract to get the `.img` file

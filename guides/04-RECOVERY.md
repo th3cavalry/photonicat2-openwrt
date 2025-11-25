@@ -80,7 +80,10 @@ rkdeveloptool ld
 rkdeveloptool wl 0 RK3576_MiniLoaderAll.bin
 
 # Write firmware
+# If using vendor image:
 rkdeveloptool wl 0x0 photonicat2-openwrt-*-*.img
+# If using your custom build:
+rkdeveloptool wl 0x0 openwrt-rockchip-armv8-armsom_sige7-squashfs-sysupgrade.img
 
 # Reboot into new firmware
 rkdeveloptool rd

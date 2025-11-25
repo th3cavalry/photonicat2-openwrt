@@ -1,10 +1,12 @@
 # Photonicat 2 - Building OpenWrt from Source
 
-Complete guide for compiling a custom OpenWrt image for Photonicat 2 from the official Photonicat OpenWrt repository.
+Complete guide for compiling a custom OpenWrt image for Photonicat 2 using Vanilla OpenWrt.
+
+> 💡 **Tip**: For a simplified, automated build process, use the `./build.sh` script in the root of this repository. This guide is for users who want to understand the manual build process or customize it further.
 
 ## Overview
 
-This guide covers building OpenWrt from source using the Photonicat team's optimized repository. The build is based on LEDE (coolsnowwolf's fork) with Rockchip RK3568 support.
+This guide covers building OpenWrt from source using the official OpenWrt repository ("Vanilla OpenWrt") with minimal patches for Photonicat 2 hardware support.
 
 ### Build Requirements
 
@@ -169,7 +171,29 @@ This downloads community packages and Rockchip-specific builds.
 
 ---
 
-## Step 4: Configure Build
+## Step 4: Apply Hardware Support (Critical)
+
+Before configuring, you must apply the Photonicat 2 device tree and kernel patches.
+
+```bash
+# Assuming you have cloned the photonicat2-openwrt repo separately to get the support files
+# Let's say it's at ~/photonicat2-openwrt
+
+# Copy Device Tree
+cp ~/photonicat2-openwrt/photonicat2-support/device-tree/rk3576-photonicat2.dts target/linux/rockchip/files/arch/arm64/boot/dts/rockchip/
+
+# Copy Kernel Patches
+# Note: Check target/linux/rockchip/patches-* for the correct version directory
+cp ~/photonicat2-openwrt/photonicat2-support/kernel-patches/*.patch target/linux/rockchip/patches-6.12/
+
+# Copy Custom Packages (Display)
+mkdir -p package/custom
+cp -r ~/photonicat2-openwrt/photonicat2-support/packages/* package/custom/
+```
+
+---
+
+## Step 5: Configure Build
 
 ### Option A: Use Default Configuration (Quick)
 
@@ -229,10 +253,10 @@ make menuconfig
 
 ---
 
-## Step 5: Download Sources
+## Step 6: Download Sources
 
 ```bash
-cd ~/openwrt-builds/lede
+cd ~/openwrt-builds/openwrt
 
 # Download all required source files
 # First build: use single thread, subsequent builds can use -j8 or higher
@@ -248,12 +272,12 @@ make download -j1
 
 ---
 
-## Step 6: Compile Firmware
+## Step 7: Compile Firmware
 
 ### First Compile (Recommended: Single Thread)
 
 ```bash
-cd ~/openwrt-builds/lede
+cd ~/openwrt-builds/openwrt
 
 # Compile with verbose output (shows build progress)
 make V=s -j1
@@ -297,7 +321,7 @@ make V=s -j1
 
 ---
 
-## Step 7: Locate Compiled Image
+## Step 8: Locate Compiled Image
 
 After successful compilation:
 
@@ -323,7 +347,7 @@ ls -lh rockchip/rockchip-rk3568/
 
 ---
 
-## Step 8: Extract and Prepare Image
+## Step 9: Extract and Prepare Image
 
 ### Extract Firmware
 
@@ -365,7 +389,7 @@ cp ~/openwrt-builds/lede/bin/targets/rockchip/rockchip-rk3568/*.md5 \
 
 ---
 
-## Step 9: Flash to Photonicat 2
+## Step 10: Flash to Photonicat 2
 
 Use the extracted image to flash your device. See [01-INSTALLATION.md](./01-INSTALLATION.md) for flashing instructions.
 

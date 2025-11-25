@@ -32,6 +32,8 @@ Photonicat 2 supports cellular connectivity through Quectel modems (RM500 or RM5
 
 ## Step 1: Install Required Packages
 
+> **Note:** If you built your image using this repository, these packages are **already installed**. You can skip this step.
+
 ```bash
 ssh root@192.168.1.1
 

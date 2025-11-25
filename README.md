@@ -331,6 +331,7 @@ cd build/openwrt
 
 # Apply Photonicat 2 hardware support
 cp ../../photonicat2-support/device-tree/*.dts target/linux/rockchip/files/arch/arm64/boot/dts/rockchip/
+# Note: Check target/linux/rockchip/patches-* for the correct version directory
 cp ../../photonicat2-support/kernel-patches/*.patch target/linux/rockchip/patches-6.12/
 
 # Update feeds (official OpenWrt feeds)
@@ -360,13 +361,22 @@ If you're developing custom kernel modules:
 
 Build with verbose output:
 ```bash
-cd build/photonicat_openwrt
+cd build/openwrt
 make V=s -j1
 ```
 
-## Legacy Documentation
+## Documentation
 
-For reference, the `guides/` and `scripts/` directories contain previous documentation and build scripts. These are kept for historical reference but are not required for the new build process.
+The `guides/` directory contains detailed documentation for installation, configuration, and recovery.
+
+- [Installation Guide](guides/01-INSTALLATION.md)
+- [LCD Screen Setup](guides/02-LCD_SCREEN_SETUP.md)
+- [5G Modem Setup](guides/03-5G_MODEM_SETUP.md)
+- [Recovery Guide](guides/04-RECOVERY.md)
+- [Building OpenWrt](guides/05-BUILDING_OPENWRT.md)
+- [Detailed Screen & Fan Guide](guides/06-SCREEN_AND_FAN_DETAILED.md)
+
+The `scripts/` directory contains the legacy build script (`build-openwrt.sh`) which can be used as an alternative to the main `build.sh` wrapper.
 
 ## Support & Resources
 
@@ -401,4 +411,4 @@ This is an unofficial build system wrapper. While tested, improper firmware flas
 
 **Last Updated**: November 2025  
 **Device**: Photonicat 2 (RK3576)  
-**OpenWrt**: Based on upstream photonicat_openwrt
+**OpenWrt**: Vanilla OpenWrt (Official) with Photonicat patches

@@ -63,14 +63,24 @@ CONFIG_PACKAGE_kmod-backlight=y
 
 ### Building with Display Support
 
-#### Option 1: Add Display Package to Build (Recommended for Full Functionality)
+#### Option 1: Automatic Build (Recommended)
+
+If you use the `./build.sh` script provided in this repository, the display package is **automatically copied** to the build environment, and the `configs/pcat2_custom.config` file already enables it.
+
+Simply run:
+```bash
+./build.sh
+```
+
+#### Option 2: Manual Build
+
+If you are building manually without the wrapper script:
 
 1. **Copy the display package to OpenWrt build**:
    ```bash
-   # After running ./build.sh and it clones OpenWrt
-   cd build/openwrt
+   # From your OpenWrt build root
    mkdir -p package/custom
-   cp -r ../../photonicat2-support/packages/pcat2-display-mini package/custom/
+   cp -r /path/to/photonicat2-support/packages/pcat2-display-mini package/custom/
    ```
 
 2. **Enable in menuconfig**:
@@ -90,7 +100,7 @@ CONFIG_PACKAGE_kmod-backlight=y
    make -j$(nproc)
    ```
 
-#### Option 2: Install Display Application Post-Install
+#### Option 3: Install Display Application Post-Install
 
 If you've already flashed OpenWrt without the display package:
 
