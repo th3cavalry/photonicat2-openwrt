@@ -89,7 +89,7 @@ The build script will automatically apply your configuration and build the custo
 Ensure your configuration targets the Photonicat 2:
 - **Target System**: `Rockchip`
 - **Subtarget**: `RK3568/RK3566/RK3576 boards`
-- **Target Profile**: `Photonicat (Photonicat 2)`
+- **Target Profile**: `ArmSoM Sige7` (upstream profile for Photonicat 2)
 
 ### Kernel Modules for LCD Display
 

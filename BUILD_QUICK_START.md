@@ -129,7 +129,7 @@ When `menuconfig` opens, you need:
 
 1. **Target System** → `Rockchip`
 2. **Subtarget** → `Rockchip RK3568/RK3566`  
-3. **Target Profile** → `Photonicat (Photonicat 2)`
+3. **Target Profile** → `ArmSoM Sige7` (upstream profile for Photonicat 2)
 4. **Target Images** → Select desired formats
 5. **Kernel Modules** → Add SPI, USB-serial for modem
 6. **LuCI** (optional) → Web interface

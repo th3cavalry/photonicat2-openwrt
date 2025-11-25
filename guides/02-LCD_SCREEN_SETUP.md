@@ -71,7 +71,16 @@ lsmod | grep -i spi
 
 ## Step 2: Install pcat2_mini_display Binary
 
-### Option A: Download Pre-Built Binary (Recommended)
+### Option A: Built-in Package (If using custom build)
+
+If you built your image using the `pcat2_custom.config` provided in this repo, the `pcat2-display-mini` package is already installed.
+You can verify it by running:
+```bash
+opkg list-installed | grep pcat2-display-mini
+```
+If installed, the service should be running automatically. You can skip to **Step 3: Configure Service**.
+
+### Option B: Download Pre-Built Binary (Recommended for Stock Firmware)
 
 ```bash
 # Create application directory

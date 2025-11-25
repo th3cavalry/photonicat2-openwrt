@@ -89,8 +89,8 @@ If the NVMe is removed, the device automatically falls back to using the eMMC ov
    ```
    
    The configuration should enable:
-   - `kmod-spi-dev`, `kmod-spi-bitbang`, `kmod-spi-rockchip` - SPI for LCD display
-   - `kmod-pwm`, `kmod-pwm-rockchip` - PWM for fan control
+   - `pcat2-display-mini` - Userspace driver for LCD display
+   - `kmod-pwm`, `kmod-pwm-rockchip` - PWM for fan control (Native)
    - `kmod-nvme`, `kmod-fs-ext4` - NVMe storage support
    - See `configs/pcat2_custom.config.example` for full list
 

@@ -82,6 +82,9 @@ sudo pacman -S --needed \
   qemu-base rsync scons squashfs-tools subversion swig texinfo \
   uglify-js unzip upx wget which xmlto xxd zlib
 
+# Note: python-pyelftools and swig are critical and often missed
+sudo pacman -S --needed python-pyelftools swig
+
 # Install AUR packages (optional, for additional tools)
 # You may use yay or another AUR helper
 # yay -S ack antlr3 genisoimage haveged lrzsz ninja p7zip
@@ -186,15 +189,28 @@ make menuconfig
 **Key Configuration Steps**:
 
 1. **Target System**: Select `Rockchip`
-2. **Subtarget**: Select `Rockchip RK3568/RK3566`
-3. **Target Profile**: Select `Photonicat (Photonicat 2)`
+2. **Subtarget**: Select `Rockchip RK3588` (Note: Photonicat 2 uses RK3576/RK3588)
+3. **Target Profile**: Select `ArmSoM Sige7` 
+   - *Note: The Photonicat 2 is manufactured by Ariaboard but uses the ArmSoM Sige7 hardware profile in upstream OpenWrt.*
 4. **Target Images**: 
    - ✓ ext4 filesystem
    - ✓ squashfs filesystem (recommended for smaller image)
    - ✓ tar.gz filesystem (for backup)
-5. **Kernel Modules**: 
-   - SPI support (for LCD display)
-   - USB-serial and QMI (for 5G modem)
+
+**Hardware Support Configuration**:
+
+1. **LCD Display Support**:
+   - Navigate to `Utilities` -> `pcat2-display-mini`
+   - Or manually add to `.config`: `CONFIG_PACKAGE_pcat2-display-mini=y`
+   - This installs the Go-based application that drives the mini display.
+
+2. **Fan Control**:
+   - Fan support is **native** via Kernel Thermal zones and PWM.
+   - Ensure `kmod-thermal` and `kmod-pwm-rockchip` are selected (usually default).
+   - No extra userspace package is required for basic operation.
+
+3. **5G Modem**:
+   - Ensure `kmod-usb-net-qmi-wwan` and `kmod-usb-serial-option` are selected.
    - ext4 + overlay filesystem
 6. **Luci Web Interface** (optional): Select if you want web admin UI
 7. **Additional Packages** (optional):

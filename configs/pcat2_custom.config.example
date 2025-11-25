@@ -8,12 +8,11 @@
 # Target System Configuration
 CONFIG_TARGET_rockchip=y
 CONFIG_TARGET_rockchip_armv8=y
-# Note: You may need to manually add/select Photonicat 2 target after device tree is added
+CONFIG_TARGET_rockchip_armv8_DEVICE_armsom_sige7=y
 
-# Required Kernel Modules for LCD Display (SPI)
-CONFIG_PACKAGE_kmod-spi-dev=y
-CONFIG_PACKAGE_kmod-spi-bitbang=y
-CONFIG_PACKAGE_kmod-spi-rockchip=y
+# LCD Display Support
+CONFIG_PACKAGE_pcat2-display-mini=y
+# (SPI drivers are dependencies of the display package)
 
 # Rockchip NPU Support (if available in vanilla OpenWrt)
 # CONFIG_PACKAGE_kmod-rknpu=y  # May not be in vanilla OpenWrt

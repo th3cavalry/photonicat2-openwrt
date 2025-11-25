@@ -44,15 +44,14 @@ The display is driven by **pcat2_mini_display**, a Go-based application that:
 
 **Repository**: https://github.com/photonicat/photonicat2_mini_display
 
-### Required Kernel Modules
+### Required Packages
 
-Add these to your `configs/pcat2_custom.config`:
+Add this to your `configs/pcat2_custom.config`:
 
 ```
-# SPI support for LCD
-CONFIG_PACKAGE_kmod-spi-dev=y
-CONFIG_PACKAGE_kmod-spi-bitbang=y
-CONFIG_PACKAGE_kmod-spi-rockchip=y
+# LCD Display Application (includes required kernel modules)
+CONFIG_PACKAGE_pcat2-display-mini=y
+```
 
 # Framebuffer support
 CONFIG_PACKAGE_kmod-fb=y

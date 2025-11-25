@@ -191,6 +191,25 @@ brew install rkdeveloptool
 
 ## Linux/Mac Installation
 
+### Prerequisites: Install rkdeveloptool
+
+**Ubuntu/Debian:**
+```bash
+sudo apt install rkdeveloptool
+```
+
+**Arch Linux:**
+`rkdeveloptool` is not in the official repositories. You can install it from AUR or build from source using our helper script:
+```bash
+# Build from source (Recommended)
+./tools/install_rkdeveloptool.sh
+```
+
+**macOS:**
+```bash
+brew install rkdeveloptool
+```
+
 ### Step 1: Prepare Device for Flashing
 
 Same as Windows - enter maskrom mode:
