@@ -1,19 +1,38 @@
 #!/bin/bash
 set -e
 
-# Install rkdeveloptool from source on Arch Linux
-# This script automates the process of building rkdeveloptool since it's not in the standard repositories.
+# Install rkdeveloptool from source
+# This script automates the process of building rkdeveloptool.
 
 echo "=== Installing Dependencies ==="
-sudo pacman -S --needed --noconfirm \
-    base-devel \
-    git \
-    libusb \
-    autoconf \
-    automake \
-    pkg-config \
-    make \
-    gcc
+
+if command -v pacman &> /dev/null; then
+    echo "Detected Arch Linux"
+    sudo pacman -S --needed --noconfirm \
+        base-devel \
+        git \
+        libusb \
+        autoconf \
+        automake \
+        pkg-config \
+        make \
+        gcc
+elif command -v apt-get &> /dev/null; then
+    echo "Detected Debian/Ubuntu"
+    sudo apt-get update
+    sudo apt-get install -y \
+        build-essential \
+        git \
+        libusb-1.0-0-dev \
+        autoconf \
+        automake \
+        pkg-config \
+        make \
+        gcc
+else
+    echo "Unsupported package manager. Please install dependencies manually:"
+    echo "libusb-1.0, autoconf, automake, pkg-config, make, gcc"
+fi
 
 echo "=== Cloning rkdeveloptool Repository ==="
 if [ -d "rkdeveloptool" ]; then
