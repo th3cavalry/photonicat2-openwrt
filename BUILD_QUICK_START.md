@@ -14,17 +14,15 @@ Building your own OpenWrt image is the **recommended** way to flash your Photoni
 
 ```bash
 cd ~/path/to/photonicat2
-./scripts/build-openwrt.sh --full --extract --backup
+./build.sh
 ```
 
 This will:
-1. ✅ Clone Photonicat OpenWrt repository
-2. ✅ Update feeds and packages
-3. ✅ Open configuration menu (menuconfig)
-4. ✅ Download all sources
+1. ✅ Clone official OpenWrt repository
+2. ✅ Apply Photonicat 2 hardware support
+3. ✅ Update feeds and packages
+4. ✅ Apply custom configuration
 5. ✅ Compile firmware
-6. ✅ Extract the image
-7. ✅ Backup to `~/photonicat2-images/`
 
 **Time:** 2-4 hours on first build (depends on CPU and internet)
 
@@ -55,34 +53,23 @@ Follow [01-INSTALLATION.md](./guides/01-INSTALLATION.md) to flash your custom im
 
 ```bash
 # Full build with options
-./scripts/build-openwrt.sh [OPTIONS]
+./build.sh [OPTIONS]
 
 OPTIONS:
-  -f, --full               Full build (clone → configure → download → compile)
-  -c, --clone              Clone repository only
-  -d, --download           Download sources only  
-  -b, --build              Configure and compile only
-  -j, --jobs N             Parallel jobs (default: auto-detect CPU cores)
-  -v, --verbose            Show detailed build output
-  --extract                Extract compressed image after build
-  --backup                 Backup images to ~/photonicat2-images/
-  --dir DIR                Custom build directory (default: ~/openwrt-builds)
+  --jobs N             Parallel jobs (default: auto-detect CPU cores)
+  --dir DIR            Custom build directory (default: ./build)
+  --skip-clone         Skip cloning repository
+  --skip-feeds         Skip updating feeds
 ```
 
 ### Common Builds
 
 ```bash
 # Quick test with 2 cores
-./scripts/build-openwrt.sh --full --jobs 2
+./build.sh --jobs 2
 
-# Verbose build to see all compile output
-./scripts/build-openwrt.sh --full --verbose
-
-# Build only (repo already cloned, config exists)
-./scripts/build-openwrt.sh --build --extract
-
-# Use custom directory
-./scripts/build-openwrt.sh --full --dir /tmp/openwrt
+# Skip feeds update (faster rebuild)
+./build.sh --skip-feeds
 ```
 
 ---
