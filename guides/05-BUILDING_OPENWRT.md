@@ -126,28 +126,28 @@ bash
 
 ## Step 2: Clone OpenWrt Repository
 
-### Option A: Use Official Photonicat Repository (Recommended)
+### Option A: Use Official OpenWrt Repository (Recommended)
 
 ```bash
 # Create build directory
 mkdir -p ~/openwrt-builds
 cd ~/openwrt-builds
 
-# Clone Photonicat's optimized OpenWrt (based on coolsnowwolf/lede)
-git clone https://github.com/photonicat/photonicat_openwrt lede
-cd lede
+# Clone official OpenWrt
+git clone https://github.com/openwrt/openwrt.git openwrt
+cd openwrt
 
 # Configure git (for your commits if needed)
 git config user.email "your-email@example.com"
 git config user.name "Your Name"
 ```
 
-### Option B: Use Official coolsnowwolf LEDE (Manual Configuration)
+### Option B: Use Photonicat Fork (Legacy)
 
 ```bash
 mkdir -p ~/openwrt-builds
 cd ~/openwrt-builds
-git clone https://github.com/coolsnowwolf/lede
+git clone https://github.com/photonicat/photonicat_openwrt lede
 cd lede
 ```
 
@@ -156,7 +156,7 @@ cd lede
 ## Step 3: Update Feeds and Install Packages
 
 ```bash
-cd ~/openwrt-builds/lede
+cd ~/openwrt-builds/openwrt
 
 # Update all feeds
 ./scripts/feeds update -a
@@ -189,7 +189,7 @@ make menuconfig
 **Key Configuration Steps**:
 
 1. **Target System**: Select `Rockchip`
-2. **Subtarget**: Select `Rockchip RK3588` (Note: Photonicat 2 uses RK3576/RK3588)
+2. **Subtarget**: Select `Rockchip ARMv8`
 3. **Target Profile**: Select `ArmSoM Sige7` 
    - *Note: The Photonicat 2 is manufactured by Ariaboard but uses the ArmSoM Sige7 hardware profile in upstream OpenWrt.*
 4. **Target Images**: 
