@@ -19,8 +19,8 @@ NC='\033[0m'  # No Color
 
 # Configuration
 BUILD_DIR="${BUILD_DIR:-$HOME/openwrt-builds}"
-REPO_URL="https://github.com/photonicat/photonicat_openwrt"
-REPO_DIR="$BUILD_DIR/lede"
+REPO_URL="https://github.com/openwrt/openwrt.git"
+REPO_DIR="$BUILD_DIR/openwrt"
 PARALLEL_JOBS="${PARALLEL_JOBS:-$(nproc)}"
 VERBOSE="${VERBOSE:-0}"
 
@@ -107,14 +107,14 @@ clone_repo() {
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]; then
             cd "$REPO_DIR"
-            git pull origin master
+            git pull origin main
             print_success "Repository updated"
         fi
     else
         mkdir -p "$BUILD_DIR"
         cd "$BUILD_DIR"
-        git clone "$REPO_URL" lede
-        cd lede
+        git clone "$REPO_URL" openwrt
+        cd openwrt
         print_success "Repository cloned to $REPO_DIR"
     fi
 }
@@ -135,7 +135,24 @@ configure_build() {
     
     cd "$REPO_DIR"
     
-    if [ -f ".config" ]; then
+    # Check for custom config in parent directory
+    local custom_config="$PWD/../../configs/pcat2_custom.config"
+    # Adjust path if script is run from repo root
+    if [ ! -f "$custom_config" ]; then
+        custom_config="$PWD/../../photonicat2/configs/pcat2_custom.config"
+    fi
+    
+    # Try to find config relative to script location
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    local project_root="$(dirname "$script_dir")"
+    local config_file="$project_root/configs/pcat2_custom.config"
+
+    if [ -f "$config_file" ]; then
+        print_info "Found custom configuration: $config_file"
+        cp "$config_file" .config
+        print_success "Applied custom configuration"
+        make defconfig
+    elif [ -f ".config" ]; then
         print_warning ".config already exists"
         read -p "Reconfigure? (y/n) " -n 1 -r
         echo
@@ -180,7 +197,7 @@ compile_firmware() {
 locate_images() {
     print_header "Build Complete!"
     
-    local output_dir="$REPO_DIR/bin/targets/rockchip/rockchip-rk3568"
+    local output_dir="$REPO_DIR/bin/targets/rockchip/armv8"
     
     if [ -d "$output_dir" ]; then
         echo ""
@@ -194,7 +211,7 @@ locate_images() {
 extract_image() {
     print_header "Extracting Image"
     
-    local output_dir="$REPO_DIR/bin/targets/rockchip/rockchip-rk3568"
+    local output_dir="$REPO_DIR/bin/targets/rockchip/armv8"
     local image=$(ls "$output_dir"/*.img.gz 2>/dev/null | head -1)
     
     if [ -z "$image" ]; then
@@ -213,7 +230,7 @@ backup_image() {
     print_header "Backing Up Image"
     
     local backup_dir="$HOME/photonicat2-images/$(date +%Y%m%d-%H%M%S)"
-    local output_dir="$REPO_DIR/bin/targets/rockchip/rockchip-rk3568"
+    local output_dir="$REPO_DIR/bin/targets/rockchip/armv8"
     
     mkdir -p "$backup_dir"
     cp "$output_dir"/*.img "$backup_dir/" 2>/dev/null || true
