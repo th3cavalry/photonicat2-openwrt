@@ -1,13 +1,12 @@
-# Photonicat 2 Flashing Instructions
+Photonicat 2 OpenWrt Release
+Date: 2025-11-24
 
-1. Extract `openwrt-rockchip-armv8-armsom_sige7-squashfs-sysupgrade.img.gz` to get the `.img` file.
-   - On Windows: Use 7-Zip or WinRAR.
-   - On Linux/Mac: Run `gunzip openwrt-rockchip-armv8-armsom_sige7-squashfs-sysupgrade.img.gz`
+Images:
+- openwrt-rockchip-armv8-armsom_sige7-squashfs-sysupgrade.img.gz: SquashFS image (Read-only rootfs + overlay) - Recommended
+- openwrt-rockchip-armv8-armsom_sige7-ext4-sysupgrade.img.gz: Ext4 image (Read-write rootfs)
 
-2. Use `RK3576_MiniLoaderAll.bin` as the bootloader/loader in your flashing tool.
-
-3. Follow the flashing guide in `guides/01-INSTALLATION.md` (or the one provided in the chat).
-
-Files included:
-- Firmware: openwrt-rockchip-armv8-armsom_sige7-squashfs-sysupgrade.img.gz
-- Bootloader: RK3576_MiniLoaderAll.bin
+Changes:
+- Fixed build conflict with pcat2-display-mini package.
+- Moved display configuration to uci-defaults script.
+- Custom ping targets (google.com, openwrt.org) configured via setup script.
+- Auto-start of display service enabled.

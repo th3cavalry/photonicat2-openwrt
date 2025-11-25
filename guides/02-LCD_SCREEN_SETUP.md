@@ -142,54 +142,29 @@ chmod -R 755 assets/
 ### Create System Config Directory
 
 ```bash
-# Create OpenWrt config directories
-mkdir -p /etc/config/pcat2_mini_display
-
-# Copy configs
-cp config.json /etc/config/pcat2_mini_display/config.json
-cp -r assets /etc/config/pcat2_mini_display/
+# Copy config to system location
+cp config.json /etc/pcat2_mini_display-config.json
+cp -r assets /usr/share/pcat2_mini_display/assets
 
 # Set permissions
-chmod 644 /etc/config/pcat2_mini_display/config.json
-chmod -R 755 /etc/config/pcat2_mini_display/assets
+chmod 644 /etc/pcat2_mini_display-config.json
 ```
 
 ---
 
-## Step 4: Create Systemd Service File
+## Step 4: Configure Service
+
+The `pcat2-display-mini` package includes an OpenWrt init script.
 
 ```bash
-# Create service file
-cat > /etc/systemd/system/pcat2_mini_display.service << 'SVCEOF'
-[Unit]
-Description=Photonicat 2 Mini Display Service
-After=network.target
-StartLimitIntervalSec=600
-StartLimitBurst=3
+# Enable service to start on boot
+/etc/init.d/pcat2-display-mini enable
 
-[Service]
-Type=simple
-User=root
-WorkingDirectory=/opt/pcat2_mini_display
-ExecStart=/opt/pcat2_mini_display/pcat2_mini_display
-Restart=on-failure
-RestartSec=10
+# Start service now
+/etc/init.d/pcat2-display-mini start
 
-# Environment variables
-Environment="DISPLAY_CONFIG=/etc/config/pcat2_mini_display/config.json"
-Environment="GPIO_RST=122"
-Environment="GPIO_DC=121"
-Environment="GPIO_CS=13"
-
-[Install]
-WantedBy=multi-user.target
-SVCEOF
-
-# Set permissions
-chmod 644 /etc/systemd/system/pcat2_mini_display.service
-
-# Reload systemd daemon
-systemctl daemon-reload
+# Check status (check if process is running)
+ps | grep photonicat2_mini_display
 ```
 
 ---
@@ -278,18 +253,13 @@ echo "spidev" >> /etc/modules
 
 ```bash
 # Enable service to start on boot
-systemctl enable pcat2_mini_display.service
+/etc/init.d/pcat2-display-mini enable
 
 # Start service now
-systemctl start pcat2_mini_display.service
+/etc/init.d/pcat2-display-mini start
 
-# Check status
-systemctl status pcat2_mini_display.service
-
-# View logs
-journalctl -u pcat2_mini_display.service -f
-
-# Service should show "active (running)"
+# Restart service
+/etc/init.d/pcat2-display-mini restart
 ```
 
 ---
@@ -300,7 +270,7 @@ journalctl -u pcat2_mini_display.service -f
 
 ```bash
 # Default config location
-nano /etc/config/pcat2_mini_display/config.json
+nano /etc/pcat2_mini_display-config.json
 ```
 
 ### Key Configuration Options
@@ -368,6 +338,57 @@ After editing, restart service:
 ```bash
 systemctl restart pcat2_mini_display.service
 ```
+
+---
+
+## Build-time Customization
+
+If you are building your own OpenWrt image, you can customize the display configuration by creating a `uci-defaults` script. This ensures your custom settings are applied automatically on the first boot.
+
+**Do not** place a custom config file at `files/etc/pcat2_mini_display-config.json` in your build root, as this will conflict with the package installation.
+
+Instead, create a script at `files/etc/uci-defaults/90-pcat2-setup`:
+
+```bash
+#!/bin/sh
+
+# Write custom display configuration
+cat <<EOF > /etc/pcat2_mini_display-config.json
+{
+    "ping_site0": "google.com",
+    "ping_site1": "openwrt.org",
+    "show_sms": true,
+    "screen_dimmer_time_on_battery_seconds": 60,
+    "screen_dimmer_time_on_dc_seconds": 86400,
+    "screen_max_brightness": 100,
+    "screen_min_brightness": 0,
+    "display_template": {
+        "elements": {
+            "page0": [
+                {
+                    "type": "text",
+                    "label": "My Custom Page",
+                    "position": {"x": 10, "y": 10},
+                    "font": "big",
+                    "color": [255, 255, 255],
+                    "enable": 1
+                }
+            ]
+        }
+    }
+}
+EOF
+
+# Enable and start the display service
+if [ -x /etc/init.d/pcat2-display-mini ]; then
+    /etc/init.d/pcat2-display-mini enable
+    /etc/init.d/pcat2-display-mini start
+fi
+
+exit 0
+```
+
+This method avoids file collisions during the build process.
 
 ---
 
@@ -483,7 +504,7 @@ curl -X POST -d "max_brightness=1" \
 2. Review configuration syntax:
    ```bash
    # Validate JSON
-   python3 -m json.tool /etc/config/pcat2_mini_display/config.json
+   python3 -m json.tool /etc/pcat2_mini_display-config.json
    ```
 
 3. Run with debug output:
