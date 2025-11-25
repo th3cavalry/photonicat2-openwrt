@@ -1,5 +1,597 @@
 #!/bin/sh
 
+# Write custom display configuration
+cat <<EOC > /etc/pcat2_mini_display-config.json
+{
+    "ping_site0": "google.com",
+    "ping_site1": "openwrt.org",
+    "show_sms": true,
+    "screen_dimmer_time_on_battery_seconds": 60,
+    "screen_dimmer_time_on_dc_seconds": 86400,
+    "screen_max_brightness": 100,
+    "screen_min_brightness": 0,
+    "display_template": {
+        "elements": {
+            "page0": [ 
+                {
+                    "type": "icon",
+                    "icon_path": "assets/svg/up_trig.svg",
+                    "position": {"x": 9, "y": 18},
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "WAN Speed Up",
+                    "position": {"x": 23, "y": 3},
+                    "font": "huge",
+                    "color": [255, 229, 0],
+                    "units": "Mbps",
+                    "data_key": "WanUP",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "icon",
+                    "icon_path": "assets/svg/down_trig.svg",
+                    "position": {"x": 9, "y": 58},
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "WAN Speed Down",
+                    "position": {"x": 23, "y": 38},
+                    "font": "huge",
+                    "color": [255, 229, 0],
+                    "units": "Mbps",
+                    "data_key": "WanDOWN",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "icon",
+                    "icon_path": "assets/svg/hline.svg",
+                    "position": {"x": 10, "y": 84},
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "os": "OpenWRT",
+                    "label": "Daily Cell Usage",
+                    "position": {"x": 10, "y": 89},
+                    "font": "tiny",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "os": "OpenWRT",
+                    "label": "Ping",
+                    "position": {"x": 10, "y": 101},
+                    "font": "huge",
+                    "color": [255, 229, 0],
+                    "units": "GB",
+                    "data_key": "DailyDataUsage",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "Monthly Data Usage",
+                    "position": {"x": 10, "y": 141},
+                    "font": "tiny",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "Ping",
+                    "position": {"x": 10, "y": 152},
+                    "font": "huge",
+                    "color": [255, 229, 0],
+                    "units": "GB",
+                    "data_key": "MonthlyDataUsage",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "icon",
+                    "icon_path": "assets/svg/hline.svg",
+                    "position": {"x": 10, "y": 198},
+                    "enable": 1
+                },
+                {
+                    "type": "icon",
+                    "icon_path": "assets/svg/batt.svg",
+                    "position": {"x": 10, "y": 210},
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "Batt",
+                    "position": {"x": 100, "y": 204},
+                    "font": "reg",
+                    "color": [255, 229, 0],
+                    "units": "w",
+                    "data_key": "BatteryWattage",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "Batt_v",
+                    "position": {"x": 35, "y": 204},
+                    "font": "reg",
+                    "color": [255, 229, 0],
+                    "units": "v",
+                    "data_key": "BatteryVoltage",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "icon",
+                    "icon_path": "assets/svg/charge.svg",
+                    "position": {"x": 10, "y": 228},
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "dc",
+                    "position": {"x": 35, "y": 228},
+                    "font": "reg",
+                    "color": [255, 229, 0],
+                    "units": "v",
+                    "data_key": "DCVoltage",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "graph",
+                    "position": {"x": 100, "y": 228},
+                    "size": {"width": 60, "height": 25},
+                    "enable": 0,
+                    "graph_config": {
+                        "graph_type": "power",
+                        "time_frame_mins": 15
+                    }
+                }
+            ],
+            "page1": [
+                {
+                    "type": "fixed_text",
+                    "label": "ping: [ping_site0]",
+                    "position": {"x": 6, "y": 3},
+                    "font": "tiny",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "Ping0",
+                    "position": {"x": 6, "y": 17},
+                    "font": "big",
+                    "color": [255, 229, 0],
+                    "units": "ms",
+                    "data_key": "Ping0",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "Rate0",
+                    "position": {"x": 115, "y": 23},
+                    "font": "unit",
+                    "color": [255, 255, 255],
+                    "units": "%",
+                    "data_key": "Ping0Rate",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "ping: [ping_site1]",
+                    "position": {"x": 6, "y":47},
+                    "font": "tiny",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "Ping1",
+                    "position": {"x": 6, "y": 61},
+                    "font": "big",
+                    "color": [255, 229, 0],
+                    "units": "ms",
+                    "data_key": "Ping1",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "Rate1",
+                    "position": {"x": 115, "y": 68},
+                    "font": "unit",
+                    "color": [255, 255, 255],
+                    "units": "%",
+                    "data_key": "Ping1Rate",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "LAN IP",
+                    "position": {"x": 6, "y": 93},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "lan",
+                    "position": {"x": 6, "y": 110},
+                    "font": "tiny",
+                    "color": [255, 229, 255],
+                    "data_key": "LAN_IP",
+                    "units_font": "unit",
+                    "units": "",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "WAN IP",
+                    "position": {"x": 6, "y": 126},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "wan",
+                    "position": {"x": 6, "y": 143},
+                    "font": "tiny",
+                    "color": [255, 229, 255],
+                    "data_key": "WAN_IP",
+                    "units_font": "unit",
+                    "units": "",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "PUBLIC IP",
+                    "position": {"x": 6, "y": 159},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "public",
+                    "position": {"x": 6, "y": 176},
+                    "font": "tiny",
+                    "color": [255, 229, 255],
+                    "data_key": "PUBLIC_IP",
+                    "units_font": "unit",
+                    "units": "",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "SSID - Onboard",
+                    "position": {"x": 6, "y": 192},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "ssid",
+                    "position": {"x": 6, "y": 209},
+                    "font": "tiny",
+                    "color": [255, 229, 255],
+                    "data_key": "SSID",
+                    "units_font": "unit",
+                    "units": "",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "SSID - PCIE",
+                    "position": {"x": 6, "y": 225},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "ssid",
+                    "position": {"x": 6, "y": 242},
+                    "font": "tiny",
+                    "color": [255, 229, 255],
+                    "data_key": "SSID2",
+                    "units_font": "unit",
+                    "units": "",
+                    "enable": 1
+                }
+
+            ],
+            "page2": [
+                {
+                    "type": "fixed_text",
+                    "label": "CPU",
+                    "position": {"x": 10, "y": 4},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "CPU",
+                    "position": {"x": 10, "y": 18},
+                    "font": "huge",
+                    "color": [255, 229, 0],
+                    "units": "%",
+                    "data_key": "CpuUsage",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "Memory - GB",
+                    "position": {"x": 10, "y": 62},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "MemUsage",
+                    "position": {"x": 10, "y": 76},
+                    "font": "huge",
+                    "color": [255, 229, 0],
+                    "units": "",
+                    "data_key": "MemUsage",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "Uptime",
+                    "position": {"x": 10, "y": 120},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "lan",
+                    "position": {"x": 10, "y": 137},
+                    "font": "thin",
+                    "color": [255, 229, 255],
+                    "data_key": "Uptime",
+                    "units_font": "unit",
+                    "units": "",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "OS Version",
+                    "position": {"x": 10, "y": 160},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "OS Version",
+                    "position": {"x": 10, "y": 178},
+                    "font": "unit",
+                    "color": [255, 229, 255],
+                    "data_key": "OSVersion",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "SN",
+                    "position": {"x": 10, "y": 202},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "SN",
+                    "position": {"x": 10, "y": 220},
+                    "font": "thin",
+                    "color": [255, 229, 255],
+                    "data_key": "SN",
+                    "units_font": "unit",
+                    "enable": 1
+                }
+            ],
+            "page3": [
+                {
+                    "type": "text",
+                    "label": "ISP",
+                    "position": {"x": 10, "y": 5},
+                    "font": "unit",
+                    "color": [255, 229, 255],
+                    "data_key": "ISPName",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "Cell Band",
+                    "position": {"x": 10, "y": 29},
+                    "font": "unit",
+                    "color": [255, 229, 255],
+                    "data_key": "ModemNetworkInfo",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "Cell Num",
+                    "position": {"x": 10, "y": 52},
+                    "font": "unit",
+                    "color": [255, 229, 255],
+                    "data_key": "SimNumber",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "Cell Dev:",
+                    "position": {"x": 10, "y": 75},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 0
+                },
+                {
+                    "type": "text",
+                    "label": "celldev",
+                    "position": {"x": 10, "y": 75},
+                    "font": "unit",
+                    "color": [255, 229, 255],
+                    "data_key": "ModemModel",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "SIM:",
+                    "position": {"x": 10, "y": 98},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "SIM:",
+                    "position": {"x": 110, "y": 98},
+                    "font": "unit",
+                    "color": [255, 229, 255],
+                    "data_key": "SimState",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "WiFi C/s:",
+                    "position": {"x": 10, "y": 121},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "WiFi C/s:",
+                    "position": {"x": 110, "y": 121},
+                    "font": "unit",
+                    "color": [255, 229, 255],
+                    "data_key": "WiFiClientsCount",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "DHCP C/s:",
+                    "position": {"x": 10, "y": 144},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "DHCP C/s:",
+                    "position": {"x": 110, "y": 144},
+                    "font": "unit",
+                    "color": [255, 229, 255],
+                    "data_key": "DHCPClientsCount",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+
+                {
+                    "type": "fixed_text",
+                    "label": "SD Card:",
+                    "position": {"x": 10, "y": 167},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "SD State",
+                    "position": {"x": 110, "y": 167},
+                    "font": "unit",
+                    "color": [255, 229, 255],
+                    "data_key": "SdState",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "Fan RPM:",
+                    "position": {"x": 10, "y": 190},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "Fan",
+                    "position": {"x": 110, "y": 190},
+                    "font": "unit",
+                    "color": [255, 229, 255],
+                    "data_key": "FanRPM",
+                    "units_font": "unit",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "PCAT C°:",
+                    "position": {"x": 10, "y": 213},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 1
+                },
+                {
+                    "type": "text",
+                    "label": "Temp",
+                    "position": {"x": 110, "y": 213},
+                    "font": "unit",
+                    "color": [255, 229, 255],
+                    "data_key": "BoardTemperature",
+                    "units_font": "unit",
+                    "units": " C",
+                    "enable": 1
+                },
+                {
+                    "type": "fixed_text",
+                    "label": "Fan RPM:",
+                    "position": {"x": 10, "y": 236},
+                    "font": "unit",
+                    "color": [255, 229, 0],
+                    "enable": 0
+                },
+                {
+                    "type": "text",
+                    "label": "Fan RPM",
+                    "position": {"x": 110, "y": 236},
+                    "font": "unit",
+                    "color": [255, 229, 255],
+                    "data_key": "FanRPM",
+                    "units_font": "unit",
+                    "units": "",
+                    "enable": 0
+                }
+            ]
+        }
+    }
+}
+EOC
+
 # Enable and start the display service
 if [ -x /etc/init.d/pcat2-display-mini ]; then
     /etc/init.d/pcat2-display-mini enable

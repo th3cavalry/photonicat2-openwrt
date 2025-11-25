@@ -212,9 +212,16 @@ apply_custom_config() {
     local kernel_config_file=$(find target/linux/rockchip/armv8 -name "config-*" | sort | tail -n 1)
     if [ -f "$kernel_config_file" ]; then
         print_info "Updating kernel config: $kernel_config_file"
-        echo "CONFIG_PHOTONICAT_PM=y" >> "$kernel_config_file"
-        echo "CONFIG_PHOTONICAT_USB_WDT=y" >> "$kernel_config_file"
-        echo "CONFIG_SERIAL_DEV_BUS=y" >> "$kernel_config_file"
+        
+        # Helper function to append if not exists
+        append_if_missing() {
+            grep -qF "$1" "$kernel_config_file" || echo "$1" >> "$kernel_config_file"
+        }
+        
+        append_if_missing "CONFIG_PHOTONICAT_PM=y"
+        append_if_missing "CONFIG_PHOTONICAT_USB_WDT=y"
+        append_if_missing "CONFIG_SERIAL_DEV_BUS=y"
+        
         print_success "Kernel config updated"
     else
         print_warning "Could not find kernel config file to update"
