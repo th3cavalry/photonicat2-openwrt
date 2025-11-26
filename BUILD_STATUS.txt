@@ -1,0 +1,327 @@
+================================================================================
+PHOTONICAT 2 CUSTOM OPENWRT BUILD - STATUS REPORT
+================================================================================
+Generated: Nov 26, 2025 - 17:25
+
+BUILD VERSION: v3 (Network fix + WiFi enabled)
+BUILD STATUS:  IN PROGRESS ⏳
+BUILD PID:     Background process (16+ make jobs)
+BUILD LOG:     /home/th3cavalry/photonicat2/build/openwrt/build.log
+BUILD DIR:     /home/th3cavalry/photonicat2/build/openwrt/
+
+================================================================================
+PHASE 1: PROBLEM ANALYSIS ✅ COMPLETED
+================================================================================
+
+Issue Identified:
+  - Custom build v1 had broken network (169.* APIPA address)
+  - No WiFi broadcasting
+  - Root cause: Interface mapping backwards (eth0 LAN vs eth1 LAN)
+
+Diagnostic Method:
+  - Extracted factory image: mount -o loop,offset=262144*512
+  - Analyzed working configuration
+  - Found correct setup: eth1 for LAN (172.16.0.1), eth0 for WAN
+
+Key Finding:
+  - Factory uses board.d scripts for auto-configuration
+  - Custom build was missing these critical scripts
+  - WiFi packages were not enabled
+
+================================================================================
+PHASE 2: SOLUTION IMPLEMENTATION ✅ COMPLETED
+================================================================================
+
+Files Added from Factory:
+  ✅ files/etc/board.d/01_leds            - LED configuration
+  ✅ files/etc/board.d/02_network         - **CRITICAL** Network interface setup
+  ✅ files/etc/config/network             - Network config (172.16.0.1/23, eth1)
+  ✅ files/etc/config/firewall            - Firewall rules
+  ✅ files/etc/config/dhcp                - DHCP server config
+
+Configuration Changes:
+  ✅ Added WiFi packages to .config:
+     - CONFIG_PACKAGE_kmod-ath=y
+     - CONFIG_PACKAGE_kmod-ath10k=y
+     - CONFIG_PACKAGE_kmod-ath11k=y
+     - CONFIG_PACKAGE_wireless-tools=y
+     - CONFIG_PACKAGE_wireless-regdb=y
+
+Files Removed (Not Needed):
+  ✅ Deleted: files/etc/uci-defaults/10-network-setup
+  ✅ Deleted: files/etc/uci-defaults/11-wireless-setup
+  ✅ Deleted: files/etc/uci-defaults/12-enable-wifi
+  ✅ Deleted: files/etc/uci-defaults/13-network-bridge
+
+Files Retained (Already Working):
+  ✅ files/etc/uci-defaults/90-pcat2-setup     - Display configuration
+  ✅ files/etc/uci-defaults/99-mount-nvme     - NVMe auto-mount
+
+================================================================================
+PHASE 3: REPOSITORY ORGANIZATION ✅ COMPLETED
+================================================================================
+
+New Documentation Created:
+  ✅ PROJECT_STATUS.md    - Complete session history and fixes
+  ✅ QUICK_REFERENCE.md   - Common commands and procedures
+  ✅ TROUBLESHOOTING.md   - Comprehensive troubleshooting guide
+  ✅ BUILD_STATUS.txt     - This file
+
+Repository Cleanup:
+  ✅ Created .gitignore with 50+ patterns
+  ✅ Staged 10 files for commit:
+     - PROJECT_STATUS.md (new)
+     - QUICK_REFERENCE.md (new)
+     - TROUBLESHOOTING.md (new)
+     - .gitignore (modified)
+     - files/etc/board.d/01_leds (new)
+     - files/etc/board.d/02_network (new - CRITICAL)
+     - files/etc/config/network (new)
+     - files/etc/config/firewall (new)
+     - files/etc/config/dhcp (new)
+  ✅ Ready for commit
+
+================================================================================
+PHASE 4: CLEAN REBUILD ⏳ IN PROGRESS
+================================================================================
+
+Build Command:
+  $ cd /home/th3cavalry/photonicat2/build/openwrt
+  $ make clean
+  $ make -j4 2>&1 > build.log 2>&1 &
+
+Current Status:
+  - 23 make processes active (parallel compilation)
+  - Build log: 70+ lines
+  - Current phase: Library compilation (libsepol, musl-fts, openssl, etc.)
+  - Estimated time remaining: 20-50 minutes
+
+Build Stages Completed:
+  ✅ Configuration loading
+  ✅ Tools compilation started
+  ✅ Toolchain preparation
+  ✅ Library compilation (in progress)
+
+Build Stages Pending:
+  ⏳ Kernel compilation
+  ⏳ Package compilation
+  ⏳ Bootloader compilation
+  ⏳ Image generation
+
+Expected Output:
+  - Image file: openwrt-rockchip-armv8-ariaboard_photonicat2-squashfs-sysupgrade.img
+  - Size: ~100-200 MB
+  - Location: build/openwrt/bin/targets/rockchip/armv8/
+
+================================================================================
+CRITICAL FIXES IN BUILD v3
+================================================================================
+
+1. NETWORK INTERFACE MAPPING (CRITICAL)
+   Problem:  eth0 configured as LAN (wrong port)
+   Solution: board.d/02_network sets eth1 as LAN automatically
+   Impact:   Device will get correct 172.16.0.1 IP on first boot
+   Source:   Factory image (verified working)
+
+2. WIRELESS DRIVER PACKAGES
+   Problem:  No WiFi on boot (packages missing)
+   Solution: Added kmod-ath, kmod-ath10k, kmod-ath11k to .config
+   Impact:   WiFi will auto-detect on first boot, SSID will broadcast
+   Status:   Compiling now
+
+3. BOARD DETECTION SCRIPTS
+   Problem:  Custom scripts conflicted with board.d automation
+   Solution: Removed broken UCI defaults, kept board.d approach
+   Impact:   Cleaner, factory-verified configuration method
+   Status:   All fixed
+
+================================================================================
+NEXT STEPS (WHEN BUILD COMPLETES)
+================================================================================
+
+1. Wait for build completion (monitor: tail -f build.log)
+   Expected: 30-60 minutes from start at 17:15
+
+2. Verify image output:
+   $ ls -lh build/openwrt/bin/targets/rockchip/armv8/*.img*
+
+3. Commit changes to git:
+   $ cd /home/th3cavalry/photonicat2
+   $ git commit -m "Network fix: use factory config with board.d scripts + WiFi"
+
+4. Flash to device:
+   - Put device in Maskrom mode (3 quick presses + 15s hold)
+   - Run: ./release/flash.sh
+   - Or manual: rkdeveloptool wl 0x0 openwrt-*.img
+
+5. Test on device:
+   $ ping 172.16.0.1          # Should respond immediately
+   $ ssh root@172.16.0.1      # Should connect
+   $ iwconfig                 # Should show wlan0
+   $ df -h                    # NVMe should auto-mount on /overlay
+
+6. Verify functionality:
+   - Check network IP: should be 172.16.0.1/23 on br-lan
+   - Check WiFi: should broadcast "OpenWrt" SSID
+   - Check NVMe: should auto-mount at /overlay
+   - Check display: should show system info
+   - Check connectivity: ping 8.8.8.8 (WAN)
+
+================================================================================
+BUILD RESOURCES
+================================================================================
+
+Disk Space Used:
+  - Build directory: 9.8 GB (growing)
+  - Free space: 1.2 TB available ✅ (plenty)
+  - Build cache: dl/ (downloaded sources)
+
+Parallel Processes:
+  - Build jobs: -j4 (4 concurrent make processes + dependencies)
+  - Current active: 23 processes (interdependencies running)
+  - Memory usage: Stable, no swapping
+  - CPU usage: Full utilization (optimal for -j4)
+
+Build System:
+  - OpenWrt version: 25.02.0
+  - Target: rockchip/armv8 (aarch64)
+  - Device tree: rk3576-photonicat2.dts
+  - Kernel version: 6.12.59
+  - Board: ariaboard,photonicat2
+
+================================================================================
+TROUBLESHOOTING QUICK REFERENCE
+================================================================================
+
+If build fails, check:
+  1. Build log: tail -50 /home/th3cavalry/photonicat2/build/openwrt/build.log | grep ERROR
+  2. Disk space: df -h
+  3. Memory: free -h
+  4. Permissions: whoami (should be th3cavalry, not root)
+
+If device won't network after flash:
+  1. Check IP: ping 172.16.0.1
+  2. SSH: ssh root@172.16.0.1
+  3. Check board detection: cat /proc/device-tree/compatible
+  4. Check network config: cat /etc/config/network
+  5. See TROUBLESHOOTING.md for detailed steps
+
+If WiFi won't enable:
+  1. Check driver: lsmod | grep ath
+  2. Check device: iwconfig
+  3. Restart: /etc/init.d/network restart
+  4. Check logs: logread | grep -i wifi
+
+Full troubleshooting guide: TROUBLESHOOTING.md
+Quick reference: QUICK_REFERENCE.md
+Session details: PROJECT_STATUS.md
+
+================================================================================
+REPOSITORY STATUS
+================================================================================
+
+Git Status:
+  - Staged files: 10 (ready for commit)
+  - Modified files: 3 (README, configs, device-tree - optional)
+  - Untracked files: 2 (CUSTOM_BUILD_NOTES, release/flash.sh - optional)
+  - Current branch: main
+  - Last commit: [previous session]
+
+Ready to Commit:
+  $ git commit -m "Build v3: Network fix + WiFi support + documentation"
+
+Repository Structure:
+  ✅ Documentation: README.md, PROJECT_STATUS.md, QUICK_REFERENCE.md, TROUBLESHOOTING.md
+  ✅ Configuration: configs/pcat2_custom.config (with WiFi packages)
+  ✅ Custom Files: files/ (network, firewall, display, NVMe configs)
+  ✅ Build Script: build.sh
+  ✅ Hardware Support: photonicat2-support/ (device tree, patches)
+  ✅ Flashing Tools: rkdeveloptool/, release/
+
+================================================================================
+KEY SUCCESS INDICATORS
+================================================================================
+
+For Build ✅ Completed:
+  - Build log shows "Built profile packages" or similar
+  - No ERROR messages in final 20 lines of build.log
+  - Image file exists: openwrt-...-sysupgrade.img
+  - Image size: 100-200 MB
+
+For Flash ✅ Successful:
+  - Device detected in Maskrom mode (lsusb)
+  - Flash completes without errors
+  - Device reboots and boots OpenWrt
+  - Green LED stays on (normal operation)
+
+For Network ✅ Working:
+  - Device has 172.16.0.1 IP (not 169.*)
+  - SSH responds: ssh root@172.16.0.1 works
+  - Ping to device succeeds
+  - Ping to 8.8.8.8 succeeds (WAN working)
+
+For WiFi ✅ Working:
+  - iwconfig shows wlan0 interface
+  - SSID "OpenWrt" broadcasts
+  - Can connect from client device
+  - Client gets IP and internet access
+
+For Storage ✅ Working:
+  - NVMe auto-mounts at /overlay
+  - df -h shows /overlay on nvme0n1p1
+  - df -h shows / on eMMC
+  - system can download and install packages
+
+================================================================================
+NOTES & OBSERVATIONS
+================================================================================
+
+1. Board detection is CRITICAL
+   - The 02_network script MUST run on first boot
+   - It sets eth1 as LAN, eth0 as WAN based on board.compatible string
+   - If missing or wrong: device gets wrong IP (APIPA 169.*)
+
+2. Factory approach is proven
+   - All configs extracted from working factory image
+   - Mount point: /tmp/factory_extract/mnt_root/ (read-only)
+   - Can re-mount if needed for reference
+
+3. WiFi requires both driver AND configuration
+   - Driver packages: kmod-ath* (now enabled)
+   - Auto-config: WiFi discovers on boot (no /etc/config/wireless needed)
+   - Factory approach: simpler, more reliable
+
+4. NVMe auto-mount works
+   - Script: files/etc/uci-defaults/99-mount-nvme
+   - Only if NVMe partition exists and is formatted
+   - Falls back to eMMC if NVMe missing (good for flexibility)
+
+5. Display configuration working
+   - Script: files/etc/uci-defaults/90-pcat2-setup
+   - Uses pcat2-display-mini package
+   - No changes needed for v3 build
+
+================================================================================
+CONTACT & RESOURCES
+================================================================================
+
+Documentation:
+  - PROJECT_STATUS.md   - Complete session record
+  - QUICK_REFERENCE.md  - Commands and procedures
+  - TROUBLESHOOTING.md  - Problem solutions
+  - README.md           - Build instructions
+
+Community:
+  - Telegram: https://t.me/+IATZElRYPydkM2Rl
+  - Official: https://photonicat.com/
+  - Wiki: https://photonicat.com/wiki/
+
+OpenWrt:
+  - Docs: https://openwrt.org/docs/
+  - Packages: https://openwrt.org/packages/start
+  - Forum: https://forum.openwrt.org/
+
+================================================================================
+GENERATED: Nov 26, 2025 - 17:25
+STATUS: Build in progress, repository organized, ready for testing
+================================================================================

@@ -1,51 +1,55 @@
-# Backup and temporary files
-*.bak
-*.tmp
-*.swp
-*.swo
-*~
-.DS_Store
-
-# Firmware and binary files (keep these local for security)
-*.img
-*.img.gz
-*.bin
-*.elf
+# Build directories
+build/
 *.o
+*.so
 *.a
 
 # Build artifacts
-build/
+bin/
 dist/
-*.so
-*.pyc
-__pycache__/
+target/
 
-# IDE and editor files
+# OS specific
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
 .vscode/
 .idea/
-*.code-workspace
-.vim/
+*.iml
+*.sublime-*
 
-# Logs
+# Temporary files
+*.tmp
 *.log
-logs/
+.bash_history
 
-# Node modules (if applicable)
+# Local config
+local.env
+*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Node
 node_modules/
-package-lock.json
+npm-debug.log
 
-# Python environment
-venv/
-env/
+# Environment
 .env
-
-# Sensitive data
 .env.local
-secrets.json
-credentials/
-private_keys/
 
-# Watch files
-watch_*
+# Release artifacts (except flash.sh and README)
+release/*.img
+release/*.img.gz
+release/*.bin
+release/images/
 
+# Don't ignore
+!.gitkeep
+!configs/pcat2_custom.config.example
